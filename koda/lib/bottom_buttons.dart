@@ -4,13 +4,15 @@ import 'package:koda/profile.dart';
 import 'package:koda/translate.dart';
 import 'package:page_transition/page_transition.dart';
 
+double buttonHeight = 50;
+
 class FooterButtons extends StatelessWidget {
   const FooterButtons({Key? key, this.page = "home"}) : super(key: key);
   final String page;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 60,
+      height: buttonHeight,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -58,7 +60,7 @@ class FooterButtons extends StatelessWidget {
 //profile page -- proflie
           IconButton(
             onPressed: () {
-              if (page != "translate") {
+              if (page != "profile") {
                 Navigator.push(
                   context,
                   PageTransition(

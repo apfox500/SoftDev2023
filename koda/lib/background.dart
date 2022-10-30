@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 BoxDecoration backgroundDecoration(BuildContext context) {
+  //TODO: background and navigation horizontal if on macos
+
   return BoxDecoration(
     color: (Theme.of(context).brightness == Brightness.light) ? Theme.of(context).primaryColor : null,
     image: (Theme.of(context).brightness == Brightness.light)

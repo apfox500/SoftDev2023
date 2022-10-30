@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
+import 'background.dart';
 import 'bottom_buttons.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -15,9 +14,16 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: const [Text("profile")],
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: backgroundDecoration(context),
+        child: Center(
+          child: Column(
+            children: [
+              Text("profile", style: Theme.of(context).textTheme.headline5),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: const FooterButtons(

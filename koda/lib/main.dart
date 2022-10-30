@@ -13,9 +13,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(primarySwatch: Colors.purple, brightness: Brightness.light),
+      theme: ThemeData(
+        //light theme
+        colorSchemeSeed: Colors.purple,
+
+        brightness: Brightness.light,
+      ),
       darkTheme: ThemeData(
-        primarySwatch: Colors.purple,
+        //dark theme
+        colorSchemeSeed: Colors.purple,
+
         brightness: Brightness.dark,
       ),
       home: const HomePage(),
@@ -45,19 +52,19 @@ class _HomePageState extends State<HomePage> {
           child: Center(
             child: Column(
               children: [
-/*                 GestureDetector(
+                GestureDetector(
                   child: Container(
-                    child: Center(
-                      child: Text("Hello World"),
-                    ),
                     width: 150.0,
                     height: 150.0,
-                    decoration: new BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.orange,
                       shape: BoxShape.circle,
                     ),
+                    child: const Center(
+                      child: Text("Hello World"),
+                    ),
                   ),
-                ), */
+                ),
               ],
             ),
           ),
