@@ -16,13 +16,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         //light theme
         colorSchemeSeed: Colors.purple,
-
         brightness: Brightness.light,
       ),
       darkTheme: ThemeData(
         //dark theme
         colorSchemeSeed: Colors.purple,
-
         brightness: Brightness.dark,
       ),
       home: const HomePage(),
