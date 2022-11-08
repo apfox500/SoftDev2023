@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'background.dart';
 import 'bottom_buttons.dart';
+import 'global.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
-
+  const ProfilePage(this.global, {Key? key}) : super(key: key);
+  final Global global;
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
@@ -13,6 +14,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
+    Global global = widget.global;
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -26,7 +28,8 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ),
-      bottomNavigationBar: const FooterButtons(
+      bottomNavigationBar: FooterButtons(
+        global,
         page: "profile",
       ),
     );

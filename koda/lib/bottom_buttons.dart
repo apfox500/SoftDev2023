@@ -1,13 +1,16 @@
 import "package:flutter/material.dart";
-import 'package:koda/main.dart';
 import 'package:koda/profile.dart';
 import 'package:koda/translate.dart';
 import 'package:page_transition/page_transition.dart';
 
+import 'global.dart';
+import 'home.dart';
+
 double buttonHeight = 50;
 
 class FooterButtons extends StatelessWidget {
-  const FooterButtons({Key? key, this.page = "home"}) : super(key: key);
+  const FooterButtons(this.global, {Key? key, this.page = "home"}) : super(key: key);
+  final Global global;
   final String page;
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,7 @@ class FooterButtons extends StatelessWidget {
                   PageTransition(
                     type: PageTransitionType.fade,
                     fullscreenDialog: true,
-                    child: const TranslatePage(),
+                    child: TranslatePage(global),
                   ),
                 );
               }
@@ -45,7 +48,7 @@ class FooterButtons extends StatelessWidget {
                   PageTransition(
                     type: PageTransitionType.fade,
                     fullscreenDialog: true,
-                    child: const HomePage(),
+                    child: HomePage(global),
                   ),
                 );
               }
@@ -66,7 +69,7 @@ class FooterButtons extends StatelessWidget {
                   PageTransition(
                     type: PageTransitionType.fade,
                     fullscreenDialog: true,
-                    child: const ProfilePage(),
+                    child: ProfilePage(global),
                   ),
                 );
               }

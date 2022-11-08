@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'background.dart';
 import 'bottom_buttons.dart';
+import 'global.dart';
 
 class TranslatePage extends StatefulWidget {
-  const TranslatePage({Key? key}) : super(key: key);
-
+  const TranslatePage(this.global, {Key? key}) : super(key: key);
+  final Global global;
   @override
   State<TranslatePage> createState() => _TranslatePageState();
 }
@@ -13,6 +14,7 @@ class TranslatePage extends StatefulWidget {
 class _TranslatePageState extends State<TranslatePage> {
   @override
   Widget build(BuildContext context) {
+    Global global = widget.global;
     double padding = 8;
     double titleHeight = MediaQuery.of(context).textScaleFactor * 20;
     double height = MediaQuery.of(context).size.height - buttonHeight - padding * 2 - titleHeight;
@@ -53,7 +55,8 @@ class _TranslatePageState extends State<TranslatePage> {
           ),
         ),
       ),
-      bottomNavigationBar: const FooterButtons(
+      bottomNavigationBar: FooterButtons(
+        global,
         page: "translate",
       ),
     );
