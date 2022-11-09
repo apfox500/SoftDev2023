@@ -4,6 +4,8 @@ import 'background.dart';
 import 'bottom_buttons.dart';
 import 'global.dart';
 
+//TODO: are we still doing this? if so gotta start it and figure out what we want to do with it
+
 class TranslatePage extends StatefulWidget {
   const TranslatePage(this.global, {Key? key}) : super(key: key);
   final Global global;

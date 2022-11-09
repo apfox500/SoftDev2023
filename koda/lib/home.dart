@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:koda/lesson.dart';
+import 'package:page_transition/page_transition.dart';
 
 import 'background.dart';
 import 'bottom_buttons.dart';
@@ -25,7 +27,33 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.all(8.0),
           child: Center(
             child: Column(
-              children: [],
+              children: [
+                OutlinedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.fade,
+                        fullscreenDialog: true,
+                        child: LessonPage(
+                          global,
+                          global.lessons["data types"]![0],
+                        ),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Column(
+                      children: const [
+                        Text(
+                            'Python basics: Data Types'), //TODO: this will need to be changed to dynamic
+                        Text('Progress: ${0}%'),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

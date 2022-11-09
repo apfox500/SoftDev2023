@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: ThemeData(
         //dark theme
-        colorSchemeSeed: Colors.purple,
+        colorSchemeSeed: Colors.purple, //TODO: choose main color/color scheme for app
         brightness: Brightness.dark,
       ),
       home: HomePage(global),
