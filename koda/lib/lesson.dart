@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:koda/bottom_buttons.dart';
+import 'package:koda/question.dart';
+import 'package:page_transition/page_transition.dart';
 
 import 'background.dart';
 import 'global.dart';
@@ -15,14 +15,14 @@ class Lesson {
   final String body;
   bool completed = false;
 
-  Lesson(
-    this.number,
-    this.section,
-    this.original,
-    this.goal,
-    this.title,
-    this.body,
-  );
+  Lesson({
+    required this.number,
+    required this.section,
+    required this.original,
+    required this.goal,
+    required this.title,
+    required this.body,
+  });
 }
 
 class LessonPage extends StatefulWidget {
@@ -50,17 +50,31 @@ class _LessonPageState extends State<LessonPage> {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+            child: ListView(
               children: [
                 Text(
                   widget.lesson.title,
                   style: Theme.of(context).textTheme.headline6,
                 ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * .1,
+                const SizedBox(
+                  height: 15,
                 ),
                 Text(widget.lesson.body),
+                const SizedBox(
+                  height: 15,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      //TODO: figure out how to move on to question(like difficulty, number of, etc.)
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          child: QuestionPage(global, global.questions["data types"]![0]),
+                          type: PageTransitionType.rightToLeft,
+                        ),
+                      );
+                    },
+                    child: const Text("Go to Questions"))
               ],
             ),
           ),
