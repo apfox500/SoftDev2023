@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:koda/bottom_buttons.dart';
+import 'package:koda/home.dart';
 import 'package:koda/question.dart';
 import 'package:page_transition/page_transition.dart';
 
 import 'background.dart';
 import 'global.dart';
+import 'question_page.dart';
 
 class Lesson {
   final double number;
@@ -66,10 +68,27 @@ class _LessonPageState extends State<LessonPage> {
                 ElevatedButton(
                     onPressed: () {
                       //TODO: figure out how to move on to question(like difficulty, number of, etc.)
+                      // for now I will use the masterOrder list
+                      int currentPlace = global.currentPlace[widget.lesson.section]!;
+                      global.currentPlace[widget.lesson.section] = currentPlace + 1;
+                      currentPlace = global.currentPlace[widget.lesson.section]!;
+
+                      Widget page = HomePage(global);
+                      try {
+                        if (global.masterOrder[widget.lesson.section]![currentPlace] is Question) {
+                          page = QuestionPage(
+                              global, global.masterOrder[widget.lesson.section]![currentPlace]);
+                        } else if (global.masterOrder[widget.lesson.section]![currentPlace]
+                            is Lesson) {
+                          page = LessonPage(
+                              global, global.masterOrder[widget.lesson.section]![currentPlace]);
+                        }
+                      } catch (_) {}
+
                       Navigator.push(
                         context,
                         PageTransition(
-                          child: QuestionPage(global, global.questions["data types"]![0]),
+                          child: page,
                           type: PageTransitionType.rightToLeft,
                         ),
                       );

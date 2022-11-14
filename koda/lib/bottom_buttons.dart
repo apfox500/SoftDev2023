@@ -8,6 +8,7 @@ import 'home.dart';
 
 double buttonHeight = 50;
 
+//TODO: rework this page to be liken the one in perfectplate
 class FooterButtons extends StatelessWidget {
   const FooterButtons(this.global, {Key? key, this.page = "home"}) : super(key: key);
   final Global global;
