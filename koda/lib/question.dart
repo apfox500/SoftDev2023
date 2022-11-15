@@ -7,7 +7,7 @@ import 'global.dart';
 
 //TODO: actual code type of question
 class Question {
-  final String section;
+  final Section section;
   final List<String> goal;
   final int? lesson;
   late String identity; //Uniuqe identifier for every question
@@ -142,4 +142,67 @@ class _MultipleChoiceState extends State<MultipleChoice> {
   }
 }
 
-enum QuestionType { multiple, select, matching, short }
+enum QuestionType {
+  multiple,
+  select,
+  matching,
+  short,
+  code,
+} //NOTE - code is experimental and as of rn is unuseable
+
+enum Section {
+  syntax,
+  dataTypes,
+  arithmetic,
+  variables,
+  commonFunctions,
+  errors,
+  comparisonOperators,
+  ifs,
+  loops,
+  reference,
+  functions,
+  classes,
+}
+
+QuestionType findType(String type) {
+  if (type == "Matching") {
+    return QuestionType.matching;
+  } else if (type == "Multiple Choice") {
+    return QuestionType.multiple;
+  } else if (type == "Short Answer") {
+    return QuestionType.short;
+  } else if (type == "Multiple Select") {
+    return QuestionType.select;
+  } else {
+    return QuestionType.code;
+  }
+}
+
+Section findSection(String section) {
+  if (section == "syntax") {
+    return Section.syntax;
+  } else if (section == "data types") {
+    return Section.dataTypes;
+  } else if (section == "arthmetic operators") {
+    return Section.arithmetic;
+  } else if (section == "variables") {
+    return Section.variables;
+  } else if (section == "common functions") {
+    return Section.commonFunctions;
+  } else if (section == "errors") {
+    return Section.errors;
+  } else if (section == "comparison operators") {
+    return Section.comparisonOperators;
+  } else if (section == "ifs") {
+    return Section.ifs;
+  } else if (section == "loops") {
+    return Section.loops;
+  } else if (section == "reference") {
+    return Section.reference;
+  } else if (section == "functions") {
+    return Section.functions;
+  } else {
+    return Section.classes;
+  }
+}

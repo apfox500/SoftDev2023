@@ -10,7 +10,7 @@ import 'question_page.dart';
 
 class Lesson {
   final double number;
-  final String section;
+  final Section section;
   final bool original; //Is it the first one viewed or the remediation one
   final List<String> goal;
   final String title;
