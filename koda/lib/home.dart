@@ -70,8 +70,7 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.all(4.0),
                       child: Column(
                         children: [
-                          Text(global.sectionNames[
-                              keys[index]]!), //TODO: this will need to be changed to dynamic
+                          Text(global.sectionNames[keys[index]]!),
                           Text('Progress: ${(progress * 100).round()}%'),
                         ],
                       ),

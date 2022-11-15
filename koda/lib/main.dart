@@ -9,9 +9,11 @@ import 'package:koda/question.dart';
 import 'home.dart';
 
 //TODO: create a page with a python editor/console on it so they can actually code in app
+//TODO: setup profiles to keep and track progress as well as control settings
+//TODO: that one page where you take a picture of code and it translates to psuedocode/enlgish
 void main() async {
   //TODO: add in loading and timer while syncing lessons
-  //Possibly use a future builder inside the app instead
+  ///Possibly use a future builder inside the app instead
   //instantiate our global variable
   Global global = Global();
   await getDataFromGoogleSheet(global);
@@ -68,8 +70,6 @@ class MyApp extends StatelessWidget {
     global.questions[Section.dataTypes]!.add(question1);
     global.masterOrder[Section.dataTypes] = [lesson1, question1, question2]; */
 
-    //TODO: import data from the google sheet
-
     //actually build the app
     return MaterialApp(
       theme: ThemeData(
@@ -79,7 +79,8 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: ThemeData(
         //dark theme
-        colorSchemeSeed: Colors.purple, //TODO: choose main color/color scheme for app
+        colorSchemeSeed: Colors
+            .purple, //TODO: choose main color/color scheme for app, apparently I suck at ui so someone else go!
         brightness: Brightness.dark,
       ),
       home: HomePage(global),

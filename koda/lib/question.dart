@@ -47,8 +47,6 @@ class Question {
     identity = "${lesson ?? -1}.$introDiff.$interDiff.$section.${Random().nextInt(1000)}";
   }
 
-  //TODO: figure out a way for how to assign the options/answers depending on the question type
-
   List<List<dynamic>> generateOptions(BuildContext context, Global global) {
     List<List<dynamic>> ret = [
       [],
@@ -73,7 +71,7 @@ class Question {
       ret[0].add(DragNDrop(this, global)); //I made it its own thing bc gee whiz was it massive
     } else if (type == QuestionType.short) {
       //TODO: short answer
-      //Probably will involve textField()
+      //Probably will involve textField() and be done in like 5 seconds I believe in you9please say I'm not talking to myself here
 
     }
 
