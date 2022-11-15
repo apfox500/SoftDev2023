@@ -20,7 +20,7 @@ class Global {
   }; //section:[lesson1, question 1.1, question 1.2, lesson 2, question 2.1 ...]
   Map<String, int> currentPlace = {
     "syntax": 0,
-    "data types": 2,
+    "data types": 0,
   }; //Section: index of lesson or question
   Map<String, String> sectionNames = {
     "syntax": "Python Basics: Syntax",
