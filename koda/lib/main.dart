@@ -6,6 +6,7 @@ import 'home.dart';
 import 'lesson.dart';
 
 //TODO: change sections to enums
+//TODO: create a page with a python editor/console on it so they can actually code in app
 void main() {
   runApp(const MyApp());
 }
@@ -51,19 +52,16 @@ class MyApp extends StatelessWidget {
             type: QuestionType.multiple,
             question: "Which is the correct way to declare a String(str)?")
         .setMultiple(
-      {"A": '"Hello World"', 'B': 'Hello World', 'C': '"Hello" "World"', 'D': '("Hello World")'},
-      ["A"],
+      ['"Hello World"', 'Hello World', '"Hello" "World"', '("Hello World")'],
+      ['"Hello World"'],
       {
-        "D":
+        '("Hello World")':
             'While the quotes are correct, parenthese aren\'t needed for strings so "Hello World" is a better choice'
       },
     );
     global.lessons["data types"]!.add(lesson1);
     global.questions["data types"]!.add(question1);
     global.masterOrder["data types"] = [lesson1, question1, question2];
-    global.masterOrder["syntax"] = [
-      lesson1
-    ]; //I am aware this isnt a syntax lesson, but Its stopping the divide by zero error
 
     //actually build the app
     return MaterialApp(

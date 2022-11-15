@@ -2,11 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'background.dart';
-import 'bottom_buttons.dart';
 import 'drag_and_drop.dart';
 import 'global.dart';
 
+//TODO: actual code type of question
 class Question {
   final String section;
   final List<String> goal;
@@ -15,14 +14,13 @@ class Question {
 
   final int introDiff; //Scale of 1-10
   final int interDiff; //scale of 1-10
-  //Either choice(multiple choice), select(Multiple select), matching, or short(Short answer)
-  final QuestionType type;
+  final QuestionType type; //made an enum QuestionType
   final String question;
 
   //For use in multiple chioice and multiple select
-  Map<String, String>? multipleOptions; //"Letter":"Actual text"
+  List<String>? multipleOptions; //[answer1, answer2, etc.]
   List<String>? correctQs; //list of all right answers
-  Map<String, String>? explanations; //"Letter":"explanation"
+  Map<String, String>? explanations; //"Actual text":"explanation"
 
 //for short answer
   String? shortAnswer;
@@ -31,8 +29,8 @@ class Question {
   Map<String, String>? matchingOptions; //"term":"defintion", probably 4 entries in each
 
   //User data abt this, may be stored elsewhere
-  bool seen = false; //has the user seen this before?
-  double? passrate;
+  int timesSeen = 0; //how many times has the user seen this before?
+  int timesPassed = 0;
 
   Question({
     required this.section,
@@ -51,31 +49,35 @@ class Question {
 
   //TODO: figure out a way for how to assign the options/answers depending on the question type
 
-  List<Widget> generateOptions(BuildContext context, Global global) {
-    List<Widget> ret = [];
-    if (type == QuestionType.multiple) {
-      //Locate the correct answer before we randomize
-      String correctText = multipleOptions![correctQs![0]]!;
-      //Get the values(aka options)
-      List<String> values = multipleOptions!.values.toList();
+  List<List<dynamic>> generateOptions(BuildContext context, Global global) {
+    List<List<dynamic>> ret = [
+      [],
+    ]; //[[options], [choices], [selected]]
+    if (type == QuestionType.multiple || type == QuestionType.select) {
       //randomize the order
-      values.shuffle();
-      //Go through each element and create a selector for it
-      for (String option in values) {
-        //TODO: actually create multiple choice options
-
-      }
-    } else if (type == QuestionType.select) {
-      //TODO: multiple select
+      multipleOptions!.shuffle();
+      //Map every string into a Text() widget to pass to the MultipleChoice widget
+      List<Text> textWidgets = multipleOptions!.map((e) => Text(e)).toList();
+      List<bool> selected = List.filled(textWidgets.length, false);
+      ret[0].add(
+        MultipleChoice(
+          global,
+          textWidgets: textWidgets,
+          selected: selected,
+          select: type == QuestionType.select,
+        ),
+      );
+      ret.add(multipleOptions!);
+      ret.add(selected);
     } else if (type == QuestionType.matching) {
-      ret.add(DragNDrop(this, global)); //I made it its own thing bc gee whiz was it massive
+      ret[0].add(DragNDrop(this, global)); //I made it its own thing bc gee whiz was it massive
     } else if (type == QuestionType.short) {
       //TODO: short answer
       //Probably will involve textField()
 
     }
 
-    return ret;
+    return ret; //[[options], [choices], [selected]]
   }
 
   Question setMatching(Map<String, String> matchingOptions) {
@@ -84,7 +86,7 @@ class Question {
   }
 
   Question setMultiple(
-      Map<String, String> multipleOptions, List<String> correctQs, Map<String, String> explanations) {
+      List<String> multipleOptions, List<String> correctQs, Map<String, String> explanations) {
     this.multipleOptions = multipleOptions;
     this.correctQs = correctQs;
     this.explanations = explanations;
@@ -95,6 +97,48 @@ class Question {
   Question setShort(String shortAnswer) {
     this.shortAnswer = shortAnswer;
     return this;
+  }
+}
+
+class MultipleChoice extends StatefulWidget {
+  const MultipleChoice(
+    this.global, {
+    Key? key,
+    required this.textWidgets,
+    required this.selected,
+    this.select = false,
+  }) : super(key: key);
+  final Global global;
+  final List<Text> textWidgets;
+  final List<bool> selected;
+  final bool select;
+
+  @override
+  State<MultipleChoice> createState() => _MultipleChoiceState();
+}
+
+class _MultipleChoiceState extends State<MultipleChoice> {
+  @override
+  Widget build(BuildContext context) {
+    return ToggleButtons(
+      isSelected: widget.selected,
+      direction: Axis.vertical,
+      renderBorder: false,
+      //borderRadius: BorderRadius.circular(10),//warning: looks v. ugly
+
+      onPressed: (index) {
+        if (!widget.select) {
+          //the move here is to loop thorugh and change whats selected
+          for (int i = 0; i < widget.selected.length; i++) {
+            widget.selected[i] = i == index;
+          }
+        } else {
+          widget.selected[index] = !widget.selected[index];
+        }
+        setState(() {});
+      },
+      children: widget.textWidgets,
+    );
   }
 }
 

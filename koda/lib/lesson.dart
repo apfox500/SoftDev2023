@@ -89,7 +89,7 @@ class _LessonPageState extends State<LessonPage> {
                         context,
                         PageTransition(
                           child: page,
-                          type: PageTransitionType.rightToLeft,
+                          type: PageTransitionType.fade,
                         ),
                       );
                     },

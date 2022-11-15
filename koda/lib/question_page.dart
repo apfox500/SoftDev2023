@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -20,7 +21,10 @@ class _QuestionPageState extends State<QuestionPage> {
   @override
   Widget build(BuildContext context) {
     Global global = widget.global;
-    List<Widget> options = widget.question.generateOptions(context, global);
+    List<List<dynamic>> optionsMaster =
+        widget.question.generateOptions(context, global); //[[options], [choices], [selected]]
+    List<Widget> options = optionsMaster[0].cast<Widget>();
+
     return Scaffold(
       bottomNavigationBar: FooterButtons(
         global,
@@ -37,17 +41,13 @@ class _QuestionPageState extends State<QuestionPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .01,
-                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * .01), //Padding
                     Text(
-                      widget.question.question,
+                      widget.question.question, //The question itself
                       style: Theme.of(context).textTheme.headline6,
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .1,
-                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * .1), //Padding
                   ] +
                   options + //Actually add in the options based on the type of question
                   [
@@ -59,6 +59,7 @@ class _QuestionPageState extends State<QuestionPage> {
                       children: [
                         TextButton(
                           onPressed: () {
+                            //stuff to go back
                             int currentPlace = global.masterOrder[widget.question.section]!
                                     .indexOf(widget.question) -
                                 1;
@@ -78,13 +79,13 @@ class _QuestionPageState extends State<QuestionPage> {
                             Navigator.push(
                               context,
                               PageTransition(
-                                type: PageTransitionType.leftToRight,
+                                type: PageTransitionType.fade,
                                 fullscreenDialog: true,
                                 child: page,
                               ),
                             );
                           },
-                          child: Text("Go back"),
+                          child: const Text("Go back"),
                         ),
                         Visibility(
                           visible: widget.question.type !=
@@ -92,32 +93,59 @@ class _QuestionPageState extends State<QuestionPage> {
                                   .matching, //hide if it is matching, probably also multiple choice
                           child: ElevatedButton(
                             onPressed: () {
-                              widget.question.seen = true;
+                              bool passed = true;
+                              List<String> neededExplains = [];
+                              widget.question.timesSeen++;
+
                               //TODO: figure out how to move on to question(like difficulty, number of, etc.)
                               // for now I will use the masterOrder list
-                              int currentPlace = global.currentPlace[widget.question.section]!;
-                              global.currentPlace[widget.question.section] = currentPlace + 1;
-                              currentPlace = global.currentPlace[widget.question.section]!;
 
-                              Widget page = HomePage(global);
-                              try {
-                                if (global.masterOrder[widget.question.section]![currentPlace]
-                                    is Question) {
-                                  page = QuestionPage(global,
-                                      global.masterOrder[widget.question.section]![currentPlace]);
-                                } else if (global.masterOrder[widget.question.section]![currentPlace]
-                                    is Lesson) {
-                                  page = LessonPage(global,
-                                      global.masterOrder[widget.question.section]![currentPlace]);
+                              //Grading the question
+                              if (widget.question.type == QuestionType.short) {
+                              } else {
+                                //This button is not available for matching, so this can only be choice and select
+                                List<String> choices = optionsMaster[1].cast<String>();
+                                List<bool> selected = optionsMaster[2].cast<bool>();
+                                //Many ways you could grade this, I'm just creating a list of what
+                                //selected should look like, and then if each value is correct they move on
+                                List<bool> rightAnswers = choices
+                                    .map((e) => widget.question.correctQs!.contains(e))
+                                    .toList();
+                                for (int i = 0; i < selected.length; i++) {
+                                  if (selected[i] != rightAnswers[i]) {
+                                    //They got something wrong
+                                    passed = false;
+                                    //if they selected a wrong answer we need to put why it was wrong
+                                    if (selected[i]) {
+                                      //this checks if we didn't offer an explanation, then the default is just saying it's wrong
+                                      neededExplains.add(widget.question.explanations![choices[i]] ??
+                                          "${choices[i]} is incorrect");
+                                    }
+                                  }
                                 }
-                              } catch (_) {}
-                              Navigator.push(
-                                context,
-                                PageTransition(
-                                  child: page,
-                                  type: PageTransitionType.rightToLeft,
-                                ),
-                              );
+                                if (passed) {
+                                  widget.question.timesPassed++;
+                                  //TODO add in explanations for correct answers
+                                } else {
+                                  if (!selected.contains(true)) {
+                                    //if they put nothing lets tell them that
+                                    neededExplains.add(
+                                        "C'mon, you gotta choose something...even if its a guess"); //TODO this guy should be random
+                                  }
+                                }
+                              }
+
+                              //Then show a dialog to tell them if they were right or not
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return ResponseDialog(
+                                      global: global,
+                                      question: widget.question,
+                                      passed: passed,
+                                      explains: neededExplains,
+                                    );
+                                  });
                             },
                             child: const Text("Submit"),
                           ),
@@ -130,5 +158,114 @@ class _QuestionPageState extends State<QuestionPage> {
         ),
       ),
     );
+  }
+}
+
+class ResponseDialog extends StatelessWidget {
+  const ResponseDialog({
+    Key? key,
+    required this.passed,
+    required this.global,
+    required this.question,
+    required this.explains,
+  }) : super(key: key);
+  final bool passed;
+  final Global global;
+  final Question question;
+  final List<String> explains;
+  @override
+  Widget build(BuildContext context) {
+    if (passed) {
+      return SimpleDialog(
+        title: const Text("Congratulations"), //TODO: make this a bank of random responses
+        children: [
+          Column(
+            children: [
+              ElevatedButton(
+                  onPressed: () {
+                    //Stuff to go to next page
+                    int currentPlace = global.currentPlace[question.section]!;
+                    global.currentPlace[question.section] = currentPlace + 1;
+                    currentPlace = global.currentPlace[question.section]!;
+
+                    Widget page = HomePage(global);
+                    try {
+                      if (global.masterOrder[question.section]![currentPlace] is Question) {
+                        page =
+                            QuestionPage(global, global.masterOrder[question.section]![currentPlace]);
+                      } else if (global.masterOrder[question.section]![currentPlace] is Lesson) {
+                        page =
+                            LessonPage(global, global.masterOrder[question.section]![currentPlace]);
+                      }
+                    } catch (_) {}
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        child: page,
+                        type: PageTransitionType.fade,
+                      ),
+                    );
+                  },
+                  child: const Text("Continue"))
+            ],
+          ),
+        ],
+      );
+    } else {
+      return Center(
+        child: SimpleDialog(
+          title: const Text("Incorrect"), //TODO make this one random too
+          children: <Widget>[
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text("Oh! you just missed the mark!"),
+                ), //TODO: make this pick from a pool of random messages to make it more ...fun?
+              ] +
+              explains
+                  .map((e) => Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(e),
+                      ))
+                  .toList() +
+              <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                        onPressed: () {
+                          //TODO find closest lesson backwards from currentPosition and then go there
+                        },
+                        child: const Text("Back to lesson")),
+                    ElevatedButton(
+                      onPressed: () {
+                        //Stuff to restart this page fresh
+                        int currentPlace = global.currentPlace[question.section]!;
+
+                        Widget page = HomePage(global);
+                        try {
+                          if (global.masterOrder[question.section]![currentPlace] is Question) {
+                            page = QuestionPage(
+                                global, global.masterOrder[question.section]![currentPlace]);
+                          } else if (global.masterOrder[question.section]![currentPlace] is Lesson) {
+                            page = LessonPage(
+                                global, global.masterOrder[question.section]![currentPlace]);
+                          }
+                        } catch (_) {}
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            child: page,
+                            type: PageTransitionType.fade,
+                          ),
+                        );
+                      },
+                      child: const Text("Try again"),
+                    ),
+                  ],
+                ),
+              ],
+        ),
+      );
+    }
   }
 }

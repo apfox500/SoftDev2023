@@ -129,7 +129,7 @@ class _DragNDropState extends State<DragNDrop> {
 
               ElevatedButton(
                 onPressed: () {
-                  widget.question.seen = true;
+                  widget.question.timesSeen++;
                   //TODO: figure out how to move on to question(like difficulty, number of, etc.)
                   // for now I will use the masterOrder list
                   int currentPlace = global.currentPlace[widget.question.section]!;
@@ -151,7 +151,7 @@ class _DragNDropState extends State<DragNDrop> {
                     context,
                     PageTransition(
                       child: page,
-                      type: PageTransitionType.rightToLeft,
+                      type: PageTransitionType.fade,
                     ),
                   );
                 },
