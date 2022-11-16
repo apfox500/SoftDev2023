@@ -31,6 +31,5 @@ class Global {
   ///techincally start anywhere, so we will need to figure out if there is intro/inter mediate or how
   ///to unlock sections etc.
 
-  //For now imma hard code in a lesson and some questions
   Global();
 }

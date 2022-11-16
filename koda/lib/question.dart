@@ -73,7 +73,7 @@ class Question extends Comparable {
       ret[0].add(DragNDrop(this, global)); //I made it its own thing bc gee whiz was it massive
     } else if (type == QuestionType.short) {
       //TODO: short answer
-      //Probably will involve textField() and be done in like 5 seconds I believe in you9please say I'm not talking to myself here
+      //Probably will involve textField() and be done in like 5 seconds I believe in you please say I'm not talking to myself here
 
     }
 
