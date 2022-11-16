@@ -15,15 +15,17 @@ dependencies:
     sdk: flutter
   
   #yall put your dependencies here:
-  page_transition: ^2.0.5
-  cupertino_icons: ^1.0.2
+  page_transition: ^2.0.9
+  cupertino_icons: ^1.0.5
   http: ^0.13.5
+  firebase: ^9.0.3
+  firebase_core: ^2.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^2.0.0
+  flutter_lints: ^2.0.1
 
 flutter:
   uses-material-design: true

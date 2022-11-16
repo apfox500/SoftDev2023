@@ -1,4 +1,6 @@
 import 'dart:convert' as convert;
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -13,11 +15,23 @@ import 'question.dart';
 //TODO: setup profiles to keep and track progress as well as control settings
 //TODO: that one page where you take a picture of code and it translates to psuedocode/enlgish
 void main() async {
+  runApp(
+    const Center(
+      child: CircularProgressIndicator(),
+    ),
+  );
   //TODO: add in loading and timer while syncing lessons
   ///Possibly use a future builder inside the app instead
   //instantiate our global variable
   Global global = Global();
+  //get lesson plans
   await getDataFromGoogleSheet(global);
+  //initialize firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  //open real app
   runApp(MyApp(global));
 }
 
@@ -27,50 +41,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //Some hard coded lessons and questions for now
-    /* Lesson lesson1 = Lesson(
-      number: 0,
-      section: Section.dataTypes,
-      original: true,
-      goal: ["int", "float", "str", "bool"],
-      title: "Introduction to Data Types",
-      body: """In python there are 4 basic data types:\n
-       - Integers(called 'int') which are positive or negative whole numbers\n 
-       - Floats(called 'float') which are positive or negative deicmal numbers\n 
-       - String(called 'str') which are usually text, words, and sentences surronded by quotes\n
-       - Booleans(called 'bool') which are either true or false\n
-       \n
-       With these 4 basic data types you can do most of the basics of coding, and you need to be able to tell them apart and know when to use them""",
-    );
-    Question question1 = Question(
-      section: Section.dataTypes,
-      goal: ["int", "float", "str", "bool"],
-      introDiff: 2,
-      interDiff: 1,
-      type: QuestionType.matching,
-      question: "Match the following to the correct data type",
-      lesson: 0,
-    ).setMatching(
-      {"1.5": "float", "Hello": "str", "2": "int", "true": "bool"},
-    );
-    Question question2 = Question(
-            section: Section.dataTypes,
-            goal: ["str"],
-            introDiff: 2,
-            interDiff: 1,
-            type: QuestionType.multiple,
-            question: "Which is the correct way to declare a String(str)?")
-        .setMultiple(
-      ['"Hello World"', 'Hello World', '"Hello" "World"', '("Hello World")'],
-      ['"Hello World"'],
-      {
-        '("Hello World")':
-            'While the quotes are correct, parenthese aren\'t needed for strings so "Hello World" is a better choice'
-      },
-    );
-    global.lessons[Section.dataTypes]!.add(lesson1);
-    global.questions[Section.dataTypes]!.add(question1);
-    global.masterOrder[Section.dataTypes] = [lesson1, question1, question2]; */
-
     //actually build the app
     return MaterialApp(
       theme: ThemeData(
@@ -111,7 +81,7 @@ Future<void> getDataFromGoogleSheet(Global global) async {
     Section section = findSection(data['section']);
     //lesson pairing
     double? lesson;
-    if (data['lesson'] != "") lesson = double.parse(data['lesson']);
+    if (data['lesson'] != "") lesson = double.parse(data['lesson'].toString());
 
     //load in generic data
     Question question = Question(
@@ -181,7 +151,6 @@ Future<void> getDataFromGoogleSheet(Global global) async {
   }
 
   //and now the lessons
-  //TODO: get the lessons from the google sheet
   for (dynamic data in jsonAppData[1]) {
     Lesson lesson = Lesson(
       number: double.parse(data['number'].toString()),
@@ -223,7 +192,7 @@ Future<void> getDataFromGoogleSheet(Global global) async {
         return a.compareTo(b);
       }),
     );
-    print(holder);
+    //print(holder);
     global.masterOrder[section] = holder;
   });
 }

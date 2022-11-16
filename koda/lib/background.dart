@@ -15,7 +15,7 @@ BoxDecoration backgroundDecoration(BuildContext context) {
             matchTextDirection: true,
           )
         : DecorationImage(
-            fit: BoxFit.contain,
+            fit: BoxFit.fitHeight,
             repeat: ImageRepeat.repeat,
             colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.dstATop),
             image: const AssetImage('assets/background.jpg'),
