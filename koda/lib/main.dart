@@ -102,7 +102,7 @@ Future<void> getDataFromGoogleSheet(Global global) async {
   //go through all of the questions
   for (dynamic data in jsonAppData[0]) {
     //seperate difficulties
-    double bothDiffs = data['difficulty'].toDouble();
+    double bothDiffs = double.parse(data['difficulty'].toString());
     int introDiff = bothDiffs.truncate();
     int interDiff = ((bothDiffs - introDiff) * 10 + 1)
         .toInt(); //gets the decimal part of it plus 1(shifts from the 0-9 to a 1-10 scale)
@@ -111,7 +111,7 @@ Future<void> getDataFromGoogleSheet(Global global) async {
     Section section = findSection(data['section']);
     //lesson pairing
     double? lesson;
-    if (data['lesson'] != "") lesson = double.parse(data['lesson']);
+    if (data['lesson'] != "") lesson = double.parse(data['lesson'].toString());
 
     //load in generic data
     Question question = Question(
