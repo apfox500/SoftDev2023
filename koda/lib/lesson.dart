@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:koda/bottom_buttons.dart';
-import 'package:koda/home.dart';
-import 'package:koda/question.dart';
 import 'package:page_transition/page_transition.dart';
 
 import 'background.dart';
+import 'bottom_buttons.dart';
 import 'global.dart';
+import 'home.dart';
+import 'question.dart';
 import 'question_page.dart';
 
 class Lesson extends Comparable {
@@ -16,6 +16,7 @@ class Lesson extends Comparable {
   final List<String> goal;
   final String title;
   final String body;
+
   bool completed = false;
 
   Lesson({

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:koda/lesson.dart';
 import 'package:page_transition/page_transition.dart';
 
 import 'background.dart';
 import 'bottom_buttons.dart';
 import 'global.dart';
+import 'lesson.dart';
 import 'question.dart';
 import 'question_page.dart';
 

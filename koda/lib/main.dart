@@ -3,11 +3,11 @@ import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
-import 'package:koda/global.dart';
-import 'package:koda/question.dart';
 
+import 'global.dart';
 import 'home.dart';
 import 'lesson.dart';
+import 'question.dart';
 
 //TODO: create a page with a python editor/console on it so they can actually code in app
 //TODO: setup profiles to keep and track progress as well as control settings
