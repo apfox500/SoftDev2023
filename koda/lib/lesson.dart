@@ -63,7 +63,7 @@ class Lesson extends Comparable {
       //for now I weight redoing a lesson after 2 new ones
     }
     //return the difference
-    return ((otherWorkingNumber - thisWorkingNumber) * 100).toInt();
+    return ((thisWorkingNumber - otherWorkingNumber) * 100).toInt();
     //multiply by 100 so we don't loose any decimals that could be hiding when we convert to int
   }
 }

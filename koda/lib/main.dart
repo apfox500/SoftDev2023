@@ -218,8 +218,12 @@ Future<void> getDataFromGoogleSheet(Global global) async {
       ...questions,
       ...remLessons,
     ]; //the ... is called the spread operator and it... does... something..?(i honestly have no clue but this line of code merges the lists while still sorting them)
-    holder.sort();
+    holder.sort(
+      ((a, b) {
+        return a.compareTo(b);
+      }),
+    );
     print(holder);
-    global.masterOrder[section]!.add(holder);
+    global.masterOrder[section] = holder;
   });
 }

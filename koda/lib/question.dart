@@ -53,6 +53,7 @@ class Question extends Comparable {
       [],
     ]; //[[options], [choices], [selected]]
     if (type == QuestionType.multiple || type == QuestionType.select) {
+      //TODO: make multiple choice pretty
       //randomize the order
       multipleOptions!.shuffle();
       //Map every string into a Text() widget to pass to the MultipleChoice widget
@@ -135,7 +136,7 @@ class Question extends Comparable {
       //for now I weight redoing a lesson after 2 new ones, .1 for question
     }
     //return the difference
-    return ((otherWorkingNumber - thisWorkingNumber) * 100).toInt();
+    return ((thisWorkingNumber - otherWorkingNumber) * 100).toInt();
     //multiply by 100 so we don't loose any decimals that could be hiding when we convert to int
   }
 }
