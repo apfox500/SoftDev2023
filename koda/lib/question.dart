@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 
 import 'drag_and_drop.dart';
 import 'global.dart';
+import 'lesson.dart';
 
 //TODO: actual code type of question
-class Question {
-  final String section;
+class Question extends Comparable {
+  final Section section;
   final List<String> goal;
-  final int? lesson;
+  final double? lesson;
   late String identity; //Uniuqe identifier for every question
 
   final int introDiff; //Scale of 1-10
@@ -47,13 +48,12 @@ class Question {
     identity = "${lesson ?? -1}.$introDiff.$interDiff.$section.${Random().nextInt(1000)}";
   }
 
-  //TODO: figure out a way for how to assign the options/answers depending on the question type
-
   List<List<dynamic>> generateOptions(BuildContext context, Global global) {
     List<List<dynamic>> ret = [
       [],
     ]; //[[options], [choices], [selected]]
     if (type == QuestionType.multiple || type == QuestionType.select) {
+      //TODO: make multiple choice pretty
       //randomize the order
       multipleOptions!.shuffle();
       //Map every string into a Text() widget to pass to the MultipleChoice widget
@@ -73,7 +73,7 @@ class Question {
       ret[0].add(DragNDrop(this, global)); //I made it its own thing bc gee whiz was it massive
     } else if (type == QuestionType.short) {
       //TODO: short answer
-      //Probably will involve textField()
+      //Probably will involve textField() and be done in like 5 seconds I believe in you9please say I'm not talking to myself here
 
     }
 
@@ -97,6 +97,47 @@ class Question {
   Question setShort(String shortAnswer) {
     this.shortAnswer = shortAnswer;
     return this;
+  }
+
+  @override
+  int compareTo(other) {
+    double otherWorkingNumber = 0;
+    double thisWorkingNumber = 0;
+    //find working number
+    if (other is Lesson) {
+      if (other.number % 1 == 0) {
+        //it is an original lesson
+        otherWorkingNumber = other.number;
+      } else {
+        //It is a remedial lesson
+        otherWorkingNumber = other.number + 2;
+        //for now I weight redoing a lesson after 2 new ones
+      }
+    } else if (other is Question) {
+      if (other.lesson! % 1 == 0) {
+        //Its an original lesson question
+        otherWorkingNumber = other.lesson! + .1;
+        //add .1 onto questions because then they follow lessons
+      } else {
+        //Its a remedial lesson question
+        otherWorkingNumber = other.lesson! + 2.1;
+        //2 for remedial, .1 for question
+      }
+    }
+
+    //then find this number
+    if (lesson! % 1 == 0) {
+      //it is an original lesson
+      thisWorkingNumber = lesson! + .1;
+      //.1 for question
+    } else {
+      //It is a remedial lesson
+      thisWorkingNumber = lesson! + 2.1;
+      //for now I weight redoing a lesson after 2 new ones, .1 for question
+    }
+    //return the difference
+    return ((thisWorkingNumber - otherWorkingNumber) * 100).toInt();
+    //multiply by 100 so we don't loose any decimals that could be hiding when we convert to int
   }
 }
 
@@ -142,4 +183,67 @@ class _MultipleChoiceState extends State<MultipleChoice> {
   }
 }
 
-enum QuestionType { multiple, select, matching, short }
+enum QuestionType {
+  multiple,
+  select,
+  matching,
+  short,
+  code,
+} //NOTE - code is experimental and as of rn is unuseable
+
+enum Section {
+  syntax,
+  dataTypes,
+  arithmetic,
+  variables,
+  commonFunctions,
+  errors,
+  comparisonOperators,
+  ifs,
+  loops,
+  reference,
+  functions,
+  classes,
+}
+
+QuestionType findType(String type) {
+  if (type == "Matching") {
+    return QuestionType.matching;
+  } else if (type == "Multiple Choice") {
+    return QuestionType.multiple;
+  } else if (type == "Short Answer") {
+    return QuestionType.short;
+  } else if (type == "Multiple Select") {
+    return QuestionType.select;
+  } else {
+    return QuestionType.code;
+  }
+}
+
+Section findSection(String section) {
+  if (section == "syntax") {
+    return Section.syntax;
+  } else if (section == "data types") {
+    return Section.dataTypes;
+  } else if (section == "arthmetic operators") {
+    return Section.arithmetic;
+  } else if (section == "variables") {
+    return Section.variables;
+  } else if (section == "common functions") {
+    return Section.commonFunctions;
+  } else if (section == "errors") {
+    return Section.errors;
+  } else if (section == "comparison operators") {
+    return Section.comparisonOperators;
+  } else if (section == "ifs") {
+    return Section.ifs;
+  } else if (section == "loops") {
+    return Section.loops;
+  } else if (section == "reference") {
+    return Section.reference;
+  } else if (section == "functions") {
+    return Section.functions;
+  } else {
+    return Section.classes;
+  }
+}

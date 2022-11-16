@@ -8,11 +8,8 @@ import 'question.dart';
 import 'question_page.dart';
 
 class DragNDrop extends StatefulWidget {
-  DragNDrop(this.question, this.global, {Key? key}) : super(key: key) {
-    done = false;
-  }
+  const DragNDrop(this.question, this.global, {Key? key}) : super(key: key);
   final Question question;
-  late bool done;
   final Global global;
   @override
   State<DragNDrop> createState() => _DragNDropState();
@@ -21,6 +18,7 @@ class DragNDrop extends StatefulWidget {
 class _DragNDropState extends State<DragNDrop> {
   List<Draggable> terms = [];
   List<Widget> definitions = [];
+  bool done = false;
 
   void generate() {
     Map<String, String> matchingOptions = widget.question.matchingOptions!;
@@ -91,20 +89,22 @@ class _DragNDropState extends State<DragNDrop> {
             );
           },
           onAccept: (String data) {
-            //TODO: figure out what to do when it actually lines
+            //TODO: make this perty with sound and animation??
             if (data == term) {
               //They were right
-              print("right");
+              //print("right");
               terms.remove(terms.firstWhere((Draggable element) => element.data == data));
               definitions.remove(
                   definitions.firstWhere((Widget element) => (element as DragTarget).key == defKey));
               if (definitions.isEmpty) {
-                widget.done = true;
+                done = true;
               }
               setState(() {});
+              //it would play a sound if its really cool...
             } else {
               //They were wrong
-              print("wrong");
+              //What to do here... an animation and some vibration maybe?
+              //print("wrong");
             }
           },
         ),
@@ -117,12 +117,10 @@ class _DragNDropState extends State<DragNDrop> {
   @override
   Widget build(BuildContext context) {
     Global global = widget.global;
-    if (definitions.isEmpty && !widget.done) generate();
-    if (widget.done) {
-      //TODO: figure out what to do now that they are done
-    }
+    if (definitions.isEmpty && !done) generate();
+
     return Column(
-      children: (widget.done)
+      children: (done)
           ? [
               const Text("You did it!!"),
               const SizedBox(height: 15), //Padding

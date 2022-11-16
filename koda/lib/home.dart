@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
               //Using a listview here to geerate a start for every section that exists
               itemCount: global.masterOrder.keys.toList().length,
               itemBuilder: ((context, index) {
-                List<String> keys = global.masterOrder.keys.toList();
+                List<Section> keys = global.masterOrder.keys.toList();
                 double progress = 0;
                 if (global.masterOrder[keys[index]]!.isNotEmpty) {
                   progress =
@@ -70,8 +70,7 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.all(4.0),
                       child: Column(
                         children: [
-                          Text(global.sectionNames[
-                              keys[index]]!), //TODO: this will need to be changed to dynamic
+                          Text(global.sectionNames[keys[index]]!),
                           Text('Progress: ${(progress * 100).round()}%'),
                         ],
                       ),
