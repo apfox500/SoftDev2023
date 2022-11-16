@@ -7,6 +7,7 @@ import 'package:koda/global.dart';
 import 'package:koda/question.dart';
 
 import 'home.dart';
+import 'lesson.dart';
 
 //TODO: create a page with a python editor/console on it so they can actually code in app
 //TODO: setup profiles to keep and track progress as well as control settings
@@ -95,10 +96,11 @@ Future<void> getDataFromGoogleSheet(Global global) async {
   //loads in a [JSON, JSON] for our questions
   Response data = await http.get(
     Uri.parse(
-        "https://script.google.com/macros/s/AKfycbyilCKFOfiGLoQlDJ8FTgfYjcOcvUCBSwBEdBxho2CYpp88wTNNymfFMdrWI_wAJqGI/exec"),
+        "https://script.google.com/macros/s/AKfycbxoqWQFiB6fVNItzBvv_LBSQoVX2Jh-TXOMdUc1CCYZtXxopQo8sna3GFOG4JBrwlYr/exec"),
   );
   dynamic jsonAppData = convert.jsonDecode(data.body);
-  for (dynamic data in jsonAppData) {
+  //go through all of the questions
+  for (dynamic data in jsonAppData[0]) {
     //seperate difficulties
     double bothDiffs = data['difficulty'].toDouble();
     int introDiff = bothDiffs.truncate();
@@ -108,8 +110,8 @@ Future<void> getDataFromGoogleSheet(Global global) async {
     QuestionType type = findType(data['type']);
     Section section = findSection(data['section']);
     //lesson pairing
-    int? lesson;
-    if (data['lesson'] != "") lesson = int.parse(data['lesson']);
+    double? lesson;
+    if (data['lesson'] != "") lesson = double.parse(data['lesson']);
 
     //load in generic data
     Question question = Question(
@@ -180,10 +182,44 @@ Future<void> getDataFromGoogleSheet(Global global) async {
 
   //and now the lessons
   //TODO: get the lessons from the google sheet
+  for (dynamic data in jsonAppData[1]) {
+    Lesson lesson = Lesson(
+      number: double.parse(data['number'].toString()),
+      section: findSection(data['section']),
+      original: data['type'] == "original",
+      goal: (data['goals'] as String).split(", "),
+      title: data['title'],
+      body: data['body'],
+    );
+    //then add it to global
+    global.lessons[lesson.section]!.add(lesson);
+  }
 
   //then order them
-  //TODO figure out the master order list for now
+  //TODO figure out how we order lessons
+  //For now we use master order list:
   //I'm thinking it goes lesson number, any questions for it, lesson ....
   //Only problem is when do you ever get to do remedial?
   //possibly an algoritihim like add 2.5 to the actual lesson number and put it and its questions in there?
+  global.masterOrder.forEach((Section section, List<dynamic> value) {
+    //first we add in all of our lessons, sorted by number
+    List<Lesson> orgLessons = global.lessons[section]!
+        .where((element) => element.number % 1 == 0)
+        .toList(); //original lessons
+    List<Lesson> remLessons = global.lessons[section]!
+        .where((element) => element.number % 1 != 0)
+        .toList(); //remediation lessons
+    List<Question> questions = global.questions[section]!
+        .where((element) => element.lesson != null)
+        .toList(); //we only want questions paired with lessons in the master order
+
+    List<dynamic> holder = [
+      ...orgLessons,
+      ...questions,
+      ...remLessons,
+    ]; //the ... is called the spread operator and it... does... something..?(i honestly have no clue but this line of code merges the lists while still sorting them)
+    holder.sort();
+    print(holder);
+    global.masterOrder[section]!.add(holder);
+  });
 }

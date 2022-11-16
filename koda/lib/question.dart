@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 
 import 'drag_and_drop.dart';
 import 'global.dart';
+import 'lesson.dart';
 
 //TODO: actual code type of question
-class Question {
+class Question extends Comparable {
   final Section section;
   final List<String> goal;
-  final int? lesson;
+  final double? lesson;
   late String identity; //Uniuqe identifier for every question
 
   final int introDiff; //Scale of 1-10
@@ -95,6 +96,47 @@ class Question {
   Question setShort(String shortAnswer) {
     this.shortAnswer = shortAnswer;
     return this;
+  }
+
+  @override
+  int compareTo(other) {
+    double otherWorkingNumber = 0;
+    double thisWorkingNumber = 0;
+    //find working number
+    if (other is Lesson) {
+      if (other.number % 1 == 0) {
+        //it is an original lesson
+        otherWorkingNumber = other.number;
+      } else {
+        //It is a remedial lesson
+        otherWorkingNumber = other.number + 2;
+        //for now I weight redoing a lesson after 2 new ones
+      }
+    } else if (other is Question) {
+      if (other.lesson! % 1 == 0) {
+        //Its an original lesson question
+        otherWorkingNumber = other.lesson! + .1;
+        //add .1 onto questions because then they follow lessons
+      } else {
+        //Its a remedial lesson question
+        otherWorkingNumber = other.lesson! + 2.1;
+        //2 for remedial, .1 for question
+      }
+    }
+
+    //then find this number
+    if (lesson! % 1 == 0) {
+      //it is an original lesson
+      thisWorkingNumber = lesson! + .1;
+      //.1 for question
+    } else {
+      //It is a remedial lesson
+      thisWorkingNumber = lesson! + 2.1;
+      //for now I weight redoing a lesson after 2 new ones, .1 for question
+    }
+    //return the difference
+    return ((otherWorkingNumber - thisWorkingNumber) * 100).toInt();
+    //multiply by 100 so we don't loose any decimals that could be hiding when we convert to int
   }
 }
 
