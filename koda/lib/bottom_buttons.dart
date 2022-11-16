@@ -8,11 +8,10 @@ import 'home.dart';
 
 double buttonHeight = 50;
 
-//TODO: rework this page to be liken the one in perfectplate
 class FooterButtons extends StatelessWidget {
-  const FooterButtons(this.global, {Key? key, this.page = "home"}) : super(key: key);
+  const FooterButtons(this.global, {Key? key, this.page = "Home"}) : super(key: key);
   final Global global;
-  final String page;
+  final String page; //page that currently on
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -20,69 +19,76 @@ class FooterButtons extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          //translate page -- translate
-          IconButton(
-            onPressed: () {
-              if (page != "translate") {
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    type: PageTransitionType.fade,
-                    fullscreenDialog: true,
-                    child: TranslatePage(global),
-                  ),
-                );
-              }
-            },
-            icon: Icon(
-              Icons.translate,
-              color: (page == "translate") ? Theme.of(context).colorScheme.primary : null,
-            ),
-            tooltip: "translate",
+          //Translate
+          Button(
+            name: "Translate",
+            pageWidget: TranslatePage(global),
+            currentPage: page,
+            color: Theme.of(context).colorScheme.primary,
+            icon: Icons.code, //TODO: better icon here
           ),
-          //home page -- home
-          IconButton(
-            onPressed: () {
-              if (page != "home") {
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    type: PageTransitionType.fade,
-                    fullscreenDialog: true,
-                    child: HomePage(global),
-                  ),
-                );
-              }
-            },
-            icon: Icon(
-              Icons.home,
-              color: (page == "home") ? Theme.of(context).colorScheme.primary : null,
-            ),
-            tooltip: "home",
+          //home page -- Home
+          Button(
+            name: "Home",
+            pageWidget: HomePage(global),
+            currentPage: page,
+            color: Theme.of(context).colorScheme.primary,
+            icon: Icons.home,
           ),
-
-//profile page -- proflie
-          IconButton(
-            onPressed: () {
-              if (page != "profile") {
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    type: PageTransitionType.fade,
-                    fullscreenDialog: true,
-                    child: ProfilePage(global),
-                  ),
-                );
-              }
-            },
-            icon: Icon(
-              Icons.person,
-              color: (page == "profile") ? Theme.of(context).colorScheme.primary : null,
-            ),
-            tooltip: "profile",
-          ),
+          //Profile page
+          Button(
+            name: "Profile",
+            pageWidget: ProfilePage(global),
+            currentPage: page,
+            color: Theme.of(context).colorScheme.primary,
+            icon: Icons.person,
+          )
         ],
       ),
+    );
+  }
+}
+
+class Button extends StatelessWidget {
+  //This class makes the buttons so it isn't a bunch of repeated code
+  const Button({
+    Key? key,
+    required this.name,
+    required this.pageWidget,
+    required this.currentPage,
+    required this.color,
+    required this.icon,
+  }) : super(key: key);
+
+  final String name; //name of this button/page it goes to
+  final Widget pageWidget; //widget that the button actually goes to(i.e. MyHomePage())
+  final String currentPage; //page user is currently on
+  final Color color; //theme color or color that the button will be
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        //this basially just makes sure that we aren't already on that page, and then itll send you
+        if (currentPage != name) {
+          Navigator.push(
+            context,
+            PageTransition(
+              type: PageTransitionType.fade,
+              fullscreenDialog: true,
+              child: pageWidget,
+            ),
+          );
+        }
+      },
+      icon: Icon(
+        icon, //icon for the page
+        color: (currentPage == name)
+            ? color
+            : null, //button will be the provided color when the user is on that page
+      ),
+      tooltip: name, //lil thing thats floats when you hover over it
     );
   }
 }

@@ -17,49 +17,21 @@ class _TranslatePageState extends State<TranslatePage> {
   @override
   Widget build(BuildContext context) {
     Global global = widget.global;
-    double padding = 8;
-    double titleHeight = MediaQuery.of(context).textScaleFactor * 20;
-    double height = MediaQuery.of(context).size.height - buttonHeight - padding * 2 - titleHeight;
-    double width = MediaQuery.of(context).size.width - padding * 2;
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: backgroundDecoration(context),
-        child: Padding(
-          padding: EdgeInsets.all(padding),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Translate",
-                  style: TextStyle(color: Theme.of(context).colorScheme.onBackground, fontSize: 20),
-                ),
-                Container(
-                  //pseudocode box?
-                  width: width,
-                  height: height / 2.1,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.tertiary,
-                      borderRadius: BorderRadius.circular(15)),
-                ),
-                Container(
-                  //code box?
-                  width: width,
-                  height: height / 2.1,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondary,
-                      borderRadius: BorderRadius.circular(15)),
-                ),
-              ],
-            ),
-          ),
+        child: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Center(),
         ),
       ),
       bottomNavigationBar: FooterButtons(
         global,
-        page: "translate",
+        page: "Translate",
       ),
     );
   }

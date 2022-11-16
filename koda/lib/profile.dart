@@ -20,17 +20,11 @@ class _ProfilePageState extends State<ProfilePage> {
         width: double.infinity,
         height: double.infinity,
         decoration: backgroundDecoration(context),
-        child: Center(
-          child: Column(
-            children: [
-              Text("profile", style: Theme.of(context).textTheme.headline5),
-            ],
-          ),
-        ),
+        child: Center(),
       ),
       bottomNavigationBar: FooterButtons(
         global,
-        page: "profile",
+        page: "Profile",
       ),
     );
   }
