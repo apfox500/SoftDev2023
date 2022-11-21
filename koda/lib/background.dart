@@ -9,13 +9,14 @@ BoxDecoration backgroundDecoration(BuildContext context) {
         ? DecorationImage(
             fit: BoxFit.contain,
             opacity: .35,
-            colorFilter: ColorFilter.mode(Theme.of(context).primaryColor, BlendMode.overlay),
+            colorFilter: ColorFilter.mode(Theme.of(context).primaryColor,
+                BlendMode.overlay), //big uggo fr like absolute shit pls change
             image: const AssetImage('assets/background.jpg'),
             repeat: ImageRepeat.repeat,
             matchTextDirection: true,
           )
         : DecorationImage(
-            fit: BoxFit.fitHeight,
+            fit: BoxFit.cover,
             repeat: ImageRepeat.repeat,
             colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.dstATop),
             image: const AssetImage('assets/background.jpg'),

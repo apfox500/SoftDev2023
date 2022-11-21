@@ -1,6 +1,8 @@
 import 'dart:convert' as convert;
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -14,13 +16,14 @@ import 'question.dart';
 //TODO: create a page with a python editor/console on it so they can actually code in app
 //TODO: setup profiles to keep and track progress as well as control settings
 //TODO: that one page where you take a picture of code and it translates to psuedocode/enlgish
+//TODO: use routes instead of .push for the main pages(i think idk if its actually supposed to happen)
 void main() async {
   runApp(
     const Center(
       child: CircularProgressIndicator(),
     ),
   );
-  //TODO: add in loading and timer while syncing lessons
+  //TODO: add in timer while syncing lessons
   ///Possibly use a future builder inside the app instead
   //instantiate our global variable
   Global global = Global();
@@ -31,6 +34,15 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  //profile stuff here for now
+  FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    if (user == null) {
+      print('User is currently signed out!');
+    } else {
+      print('User is signed in!');
+      //TODO: import data if they are signed in
+    }
+  });
   //open real app
   runApp(MyApp(global));
 }
@@ -38,14 +50,19 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp(this.global, {Key? key}) : super(key: key);
   final Global global;
+
   @override
   Widget build(BuildContext context) {
-    //Some hard coded lessons and questions for now
+    //for now I will unlock some sections, but once user update is working it should be removed
+    //TODO: remove
+    global.unlocked[Section.dataTypes] = true;
+    global.unlocked[Section.arithmetic] = true;
+
     //actually build the app
     return MaterialApp(
       theme: ThemeData(
         //light theme
-        colorSchemeSeed: Colors.purple,
+        colorSchemeSeed: Colors.purple, //currently this is big uggo
         brightness: Brightness.light,
       ),
       darkTheme: ThemeData(
@@ -54,8 +71,25 @@ class MyApp extends StatelessWidget {
             .purple, //TODO: choose main color/color scheme for app, apparently I suck at ui so someone else go!
         brightness: Brightness.dark,
       ),
-      home: HomePage(global),
+      initialRoute: FirebaseAuth.instance.currentUser == null
+          ? '/sign-in'
+          : '/home', //this way, only signed in users can use the app
       debugShowCheckedModeBanner: false,
+      routes: {
+        '/sign-in': (context) {
+          return SignInScreen(
+            providers: global.providers,
+            actions: [
+              AuthStateChangeAction<SignedIn>((context, state) {
+                Navigator.pushReplacementNamed(context, '/home');
+              }),
+            ],
+          );
+        },
+        '/home': (context) {
+          return HomePage(global);
+        }
+      },
       //debugShowMaterialGrid: true,
     );
   }
@@ -63,6 +97,7 @@ class MyApp extends StatelessWidget {
 
 //Function to load in data from the google sheet
 Future<void> getDataFromGoogleSheet(Global global) async {
+  //TODO wrap in a try catch so errors in the google sheet wont fuck us over
   //loads in a [JSON, JSON] for our questions
   Response data = await http.get(
     Uri.parse(
@@ -72,7 +107,7 @@ Future<void> getDataFromGoogleSheet(Global global) async {
   //go through all of the questions
   for (dynamic data in jsonAppData[0]) {
     //seperate difficulties
-    double bothDiffs = data['difficulty'].toDouble();
+    double bothDiffs = double.parse(data['difficulty'].toString());
     int introDiff = bothDiffs.truncate();
     int interDiff = ((bothDiffs - introDiff) * 10 + 1)
         .toInt(); //gets the decimal part of it plus 1(shifts from the 0-9 to a 1-10 scale)
