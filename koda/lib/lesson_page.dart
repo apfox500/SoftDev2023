@@ -48,13 +48,19 @@ class _LessonPageState extends State<LessonPage> {
                   height: 15,
                 ),
                 ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       //TODO: figure out how to move on to question(like difficulty, number of, etc.)
                       // for now I will use the masterOrder list
                       int currentPlace = global.currentPlace[widget.lesson.section]!;
                       global.currentPlace[widget.lesson.section] = currentPlace + 1;
                       currentPlace = global.currentPlace[widget.lesson.section]!;
 
+                      //user stuff
+                      widget.lesson.completed = true;
+                      global.seenLessons.add(widget.lesson);
+                      global.syncUserData();
+
+                      //actually moving pages
                       Widget page = HomePage(global);
                       try {
                         if (global.masterOrder[widget.lesson.section]![currentPlace] is Question) {

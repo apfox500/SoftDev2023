@@ -203,12 +203,10 @@ Future<void> getDataFromGoogleSheet(Global global) async {
   //possibly an algoritihim like add 2.5 to the actual lesson number and put it and its questions in there?
   global.masterOrder.forEach((Section section, List<dynamic> value) {
     //first we add in all of our lessons, sorted by number
-    List<Lesson> orgLessons = global.lessons[section]!
-        .where((element) => element.number % 1 == 0)
-        .toList(); //original lessons
-    List<Lesson> remLessons = global.lessons[section]!
-        .where((element) => element.number % 1 != 0)
-        .toList(); //remediation lessons
+    List<Lesson> orgLessons =
+        global.lessons[section]!.where((element) => element.number % 1 == 0).toList(); //original lessons
+    List<Lesson> remLessons =
+        global.lessons[section]!.where((element) => element.number % 1 != 0).toList(); //remediation lessons
     List<Question> questions = global.questions[section]!
         .where((element) => element.lesson != null)
         .toList(); //we only want questions paired with lessons in the master order

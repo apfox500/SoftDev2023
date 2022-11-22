@@ -183,6 +183,12 @@ class ResponseDialog extends StatelessWidget {
                     global.currentPlace[question.section] = currentPlace + 1;
                     currentPlace = global.currentPlace[question.section]!;
 
+                    //user stuff
+                    question.timesSeen++;
+                    question.timesPassed++;
+                    global.seenQuestions.add(question);
+                    global.syncUserData();
+
                     Widget page = HomePage(global);
                     try {
                       if (global.masterOrder[question.section]![currentPlace] is Question) {

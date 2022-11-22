@@ -135,6 +135,11 @@ class _DragNDropState extends State<DragNDrop> {
                   global.currentPlace[widget.question.section] = currentPlace + 1;
                   currentPlace = global.currentPlace[widget.question.section]!;
 
+                  //user stuff
+                  widget.question.timesSeen++;
+                  widget.question.timesPassed++;
+                  global.seenQuestions.add(widget.question);
+                  global.syncUserData();
                   Widget page = HomePage(global);
                   try {
                     if (global.masterOrder[widget.question.section]![currentPlace] is Question) {

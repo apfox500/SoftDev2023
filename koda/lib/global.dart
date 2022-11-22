@@ -40,8 +40,8 @@ class Global {
   Map<Section, bool> unlocked = {}; //have they unlocked the section?
   User? user;
   Map<Section, int> currentPlace = {}; //Section: index of lesson or question
-  List<Question> seenQuestions = []; //here:[Question], in firestore: [Question.toString, timesSeen, timesPassed]
-  List<Lesson> seenLessons = []; //here:[Lesson], in firestore: [Lesson, completed]
+  List<Question> seenQuestions = []; //here:[Question], in firestore: Question.toString-+-timesSeen-+-timesPassed
+  List<Lesson> seenLessons = []; //here:[Lesson], in firestore: Lesson as a string-+-completed
 
   Global({required this.user}) {
     for (Section section in Section.values) {
@@ -73,7 +73,7 @@ class Global {
           //update seen questions
           for (dynamic question in (data["seenQuestions"] ?? []) as List<dynamic>) {
             List<dynamic> questionFormatted =
-                question as List<dynamic>; //[Question.toString, timesSeen, timesPassed]
+                question.toString().split("-+-"); //Question.toString-+-timesSeen-+-timesPassed
             List<String> indentifiers = questionFormatted[0].toString().split("|");
             //[section, ... ]
             Section section = Section.values.byName(indentifiers[0]);
@@ -88,7 +88,7 @@ class Global {
 
           //update seen lessons
           for (dynamic lesson in (data["lessons"] ?? []) as List<dynamic>) {
-            List<dynamic> lessonFormatted = lesson as List<dynamic>; //[Lesson as a string, completed]
+            List<dynamic> lessonFormatted = lesson.toString().split("-+-"); //Lesson as a string-+-completed
             List<String> indentifiers = lessonFormatted[0].toString().split("|");
             //[section, lesson#, ... ]
             Section section = Section.values.byName(indentifiers[0]);
@@ -119,6 +119,19 @@ class Global {
 
   Future<void> syncUserData() async {
     //TODO implement syncing user data
+    //This function syncs all of the users data into the cloud, using the .update because if we don't have to overwrite we dont want to obviously
+    CollectionReference db = FirebaseFirestore.instance.collection("Users");
+    if (user != null) {
+      List<String> formattedSeenQuestions =
+          seenQuestions.map((e) => "$e-+-${e.timesSeen}-+-${e.timesPassed}").toList();
+      List<String> formattedSeenLessons = seenLessons.map((e) => "$e-+-${e.completed}").toList();
+      await db.doc(user!.uid).update({
+        "currentPlace": currentPlace.map((key, value) => MapEntry(key.toString(), value)),
+        "unlocked": unlocked.map((key, value) => MapEntry(key.name, value)),
+        "seenQuestions": formattedSeenQuestions,
+        "seenLessons": formattedSeenLessons,
+      });
+    }
   }
 
   void signout() {
