@@ -37,6 +37,7 @@ class _ProfilePageState extends State<ProfilePage> {
               providers: global.providers,
               actions: [
                 SignedOutAction((context) {
+                  global.signout();
                   Navigator.pushReplacementNamed(context, '/sign-in');
                 }),
               ],

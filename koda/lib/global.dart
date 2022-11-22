@@ -9,15 +9,11 @@ class Global {
   Map<Section, List<Lesson>> lessons = {}; //section: [lessons]
 
   Map<Section, List<Question>> questions = {}; //section:[questions]
-  //TODO: create an algorithim for lessons rather than just hard code
+  //TODO: create an algorithim for lessons rather than just hard code - Andrew has a voicenote with
+  ///his plan of how to do it, tlak to him or let him do it
   //for now i will just be hardcoding in a plan, but it should be dynamic based on whether they pass questions, what theyve seen etc.
   Map<Section, List<dynamic>> masterOrder =
       {}; //section:[lesson1, question 1.1, question 1.2, lesson 2, question 2.1 ...]
-  Map<Section, int> currentPlace = {
-    Section.syntax: 0,
-    Section.dataTypes: 0,
-    Section.loops: 0,
-  }; //Section: index of lesson or question
   Map<Section, String> sectionNames = {
     Section.syntax: "Python Basics: Syntax",
     Section.dataTypes: "Python Basics: Data Types",
@@ -36,10 +32,13 @@ class Global {
   ///techincally start anywhere, so we will need to figure out if there is intro/inter mediate or how
   ///to unlock sections etc.
 
-  //user stuff
+  //Universal Firebase stuff
   List<AuthProvider<AuthListener, AuthCredential>> providers = [EmailAuthProvider()];
-  Map<Section, bool> unlocked = {}; //have they onlocked the section?
+
+  //user specific data stuff
+  Map<Section, bool> unlocked = {}; //have they unlocked the section?
   User? user;
+  Map<Section, int> currentPlace = {}; //Section: index of lesson or question
 
   Global({required this.user}) {
     for (Section section in Section.values) {
@@ -54,10 +53,31 @@ class Global {
 
   Future<Map<Section, bool>> userUpdate() async {
     //This function pulls in all of the data from the database for the user
-    //TODO: implement userUpdate
-    if (user != null) {}
+    //It will get: current progress, unlocked, historic passrates and seen questions
+    if (user != null) {
+      //TODO: implement userUpdate
 
-    //in the end we return our unlocked
+    }
+
+    //in the end we return our unlocked(this is for the future building on the home page)
     return unlocked;
+  }
+
+  void signout() {
+    //reset everything to blank so there is no risk of carryover data
+    user = null;
+    for (Section section in Section.values) {
+      currentPlace[section] = 0;
+      unlocked[section] = false; //defaults to no unlocked sections
+      for (Question question in questions[section]!) {
+        //delete all possible question data
+        question.timesSeen = 0;
+        question.timesPassed = 0;
+      }
+      for (Lesson lesson in lessons[section]!) {
+        //delete all possible lesson data
+        lesson.completed = false;
+      }
+    }
   }
 }
