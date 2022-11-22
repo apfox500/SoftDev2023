@@ -6,6 +6,7 @@ import 'bottom_buttons.dart';
 import 'global.dart';
 import 'home.dart';
 import 'lesson.dart';
+import 'lesson_page.dart';
 import 'question.dart';
 
 class QuestionPage extends StatefulWidget {
@@ -59,20 +60,17 @@ class _QuestionPageState extends State<QuestionPage> {
                         TextButton(
                           onPressed: () {
                             //stuff to go back
-                            int currentPlace = global.masterOrder[widget.question.section]!
-                                    .indexOf(widget.question) -
-                                1;
+                            int currentPlace =
+                                global.masterOrder[widget.question.section]!.indexOf(widget.question) - 1;
                             global.currentPlace[widget.question.section] = currentPlace;
 
                             Widget page = HomePage(global);
-                            if (global.masterOrder[widget.question.section]![currentPlace]
-                                is Question) {
+                            if (global.masterOrder[widget.question.section]![currentPlace] is Question) {
                               page = QuestionPage(
                                   global, global.masterOrder[widget.question.section]![currentPlace]);
-                            } else if (global.masterOrder[widget.question.section]![currentPlace]
-                                is Lesson) {
-                              page = LessonPage(
-                                  global, global.masterOrder[widget.question.section]![currentPlace]);
+                            } else if (global.masterOrder[widget.question.section]![currentPlace] is Lesson) {
+                              page =
+                                  LessonPage(global, global.masterOrder[widget.question.section]![currentPlace]);
                             }
 
                             Navigator.push(
@@ -88,8 +86,7 @@ class _QuestionPageState extends State<QuestionPage> {
                         ),
                         Visibility(
                           visible: widget.question.type !=
-                              QuestionType
-                                  .matching, //hide if it is matching, probably also multiple choice
+                              QuestionType.matching, //hide if it is matching, probably also multiple choice
                           child: ElevatedButton(
                             onPressed: () {
                               bool passed = true;
@@ -107,9 +104,8 @@ class _QuestionPageState extends State<QuestionPage> {
                                 List<bool> selected = optionsMaster[2].cast<bool>();
                                 //Many ways you could grade this, I'm just creating a list of what
                                 //selected should look like, and then if each value is correct they move on
-                                List<bool> rightAnswers = choices
-                                    .map((e) => widget.question.correctQs!.contains(e))
-                                    .toList();
+                                List<bool> rightAnswers =
+                                    choices.map((e) => widget.question.correctQs!.contains(e)).toList();
                                 for (int i = 0; i < selected.length; i++) {
                                   if (selected[i] != rightAnswers[i]) {
                                     //They got something wrong
@@ -190,11 +186,9 @@ class ResponseDialog extends StatelessWidget {
                     Widget page = HomePage(global);
                     try {
                       if (global.masterOrder[question.section]![currentPlace] is Question) {
-                        page =
-                            QuestionPage(global, global.masterOrder[question.section]![currentPlace]);
+                        page = QuestionPage(global, global.masterOrder[question.section]![currentPlace]);
                       } else if (global.masterOrder[question.section]![currentPlace] is Lesson) {
-                        page =
-                            LessonPage(global, global.masterOrder[question.section]![currentPlace]);
+                        page = LessonPage(global, global.masterOrder[question.section]![currentPlace]);
                       }
                     } catch (_) {}
                     Navigator.push(
@@ -243,11 +237,9 @@ class ResponseDialog extends StatelessWidget {
                         Widget page = HomePage(global);
                         try {
                           if (global.masterOrder[question.section]![currentPlace] is Question) {
-                            page = QuestionPage(
-                                global, global.masterOrder[question.section]![currentPlace]);
+                            page = QuestionPage(global, global.masterOrder[question.section]![currentPlace]);
                           } else if (global.masterOrder[question.section]![currentPlace] is Lesson) {
-                            page = LessonPage(
-                                global, global.masterOrder[question.section]![currentPlace]);
+                            page = LessonPage(global, global.masterOrder[question.section]![currentPlace]);
                           }
                         } catch (_) {}
                         Navigator.push(

@@ -4,6 +4,7 @@ import 'package:page_transition/page_transition.dart';
 import 'global.dart';
 import 'home.dart';
 import 'lesson.dart';
+import 'lesson_page.dart';
 import 'question.dart';
 import 'question_page.dart';
 
@@ -94,8 +95,8 @@ class _DragNDropState extends State<DragNDrop> {
               //They were right
               //print("right");
               terms.remove(terms.firstWhere((Draggable element) => element.data == data));
-              definitions.remove(
-                  definitions.firstWhere((Widget element) => (element as DragTarget).key == defKey));
+              definitions
+                  .remove(definitions.firstWhere((Widget element) => (element as DragTarget).key == defKey));
               if (definitions.isEmpty) {
                 done = true;
               }
@@ -137,11 +138,9 @@ class _DragNDropState extends State<DragNDrop> {
                   Widget page = HomePage(global);
                   try {
                     if (global.masterOrder[widget.question.section]![currentPlace] is Question) {
-                      page = QuestionPage(
-                          global, global.masterOrder[widget.question.section]![currentPlace]);
+                      page = QuestionPage(global, global.masterOrder[widget.question.section]![currentPlace]);
                     } else if (global.masterOrder[widget.question.section]![currentPlace] is Lesson) {
-                      page = LessonPage(
-                          global, global.masterOrder[widget.question.section]![currentPlace]);
+                      page = LessonPage(global, global.masterOrder[widget.question.section]![currentPlace]);
                     }
                   } catch (_) {}
 
