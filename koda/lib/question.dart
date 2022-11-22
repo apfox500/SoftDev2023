@@ -11,7 +11,6 @@ class Question extends Comparable {
   final Section section;
   final List<String> goal;
   final double? lesson;
-  late String identity; //Uniuqe identifier for every question
 
   final int introDiff; //Scale of 1-10
   final int interDiff; //scale of 1-10
@@ -40,13 +39,8 @@ class Question extends Comparable {
     required this.interDiff,
     required this.type,
     required this.question,
-    this.lesson = -1,
-  }) {
-    //TODO: figure out how to assign indenties to questions
-    //for now I'm thining "lesson number(-1 if not).intro difficulty.inter difficulty.section.3 digit random number"
-    //fyi, the ?? checks if its not null, if it is then the other thing will be passed(-1 in this instance)
-    identity = "${lesson ?? -1}.$introDiff.$interDiff.$section.${Random().nextInt(1000)}";
-  }
+    this.lesson,
+  }) {}
 
   List<List<dynamic>> generateOptions(BuildContext context, Global global) {
     List<List<dynamic>> ret = [
@@ -139,6 +133,11 @@ class Question extends Comparable {
     return ((thisWorkingNumber - otherWorkingNumber) * 100).toInt();
     //multiply by 100 so we don't loose any decimals that could be hiding when we convert to int
   }
+
+  @override
+  String toString() {
+    return "$section|$goal|$lesson|$introDiff|$interDiff|$type|$question";
+  }
 }
 
 class MultipleChoice extends StatefulWidget {
@@ -203,7 +202,10 @@ enum Section {
   loops,
   reference,
   functions,
-  classes,
+  classes;
+
+  @override
+  String toString() => name;
 }
 
 QuestionType findType(String type) {
