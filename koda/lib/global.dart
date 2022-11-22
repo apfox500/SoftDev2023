@@ -39,19 +39,25 @@ class Global {
   //user stuff
   List<AuthProvider<AuthListener, AuthCredential>> providers = [EmailAuthProvider()];
   Map<Section, bool> unlocked = {}; //have they onlocked the section?
+  User? user;
 
-  Global() {
+  Global({required this.user}) {
     for (Section section in Section.values) {
       lessons[section] = [];
       questions[section] = [];
       masterOrder[section] = [];
       currentPlace[section] = 0;
       unlocked[section] = false; //defaults to no unlocked sections
+
     }
   }
 
-  Future<void> userUpdate(User user) async {
+  Future<Map<Section, bool>> userUpdate() async {
     //This function pulls in all of the data from the database for the user
     //TODO: implement userUpdate
+    if (user != null) {}
+
+    //in the end we return our unlocked
+    return unlocked;
   }
 }

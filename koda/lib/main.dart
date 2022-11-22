@@ -25,24 +25,21 @@ void main() async {
   );
   //TODO: add in timer while syncing lessons
   ///Possibly use a future builder inside the app instead
-  //instantiate our global variable
-  Global global = Global();
-  //get lesson plans
-  await getDataFromGoogleSheet(global);
-  //initialize firebase
+  /////initialize firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  User? user = FirebaseAuth.instance.currentUser;
+  //instantiate our global variable
+  Global global = Global(user: user);
+  //get lesson plans
+  await getDataFromGoogleSheet(global);
 
   //profile stuff here for now
-  FirebaseAuth.instance.authStateChanges().listen((User? user) {
-    if (user == null) {
-      print('User is currently signed out!');
-    } else {
-      print('User is signed in!');
-      //TODO: import data if they are signed in
-    }
-  });
+  if (user != null) {
+    await global.userUpdate();
+  }
+
   //open real app
   runApp(MyApp(global));
 }

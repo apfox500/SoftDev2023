@@ -33,6 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
           child: SafeArea(
             child: ProfileScreen(
               //TODO: improve profile page ui
+              //We need some way of contiuing the amazing background as well as having settings
               providers: global.providers,
               actions: [
                 SignedOutAction((context) {
