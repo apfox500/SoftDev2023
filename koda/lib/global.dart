@@ -81,8 +81,8 @@ class Global {
                 .firstWhere((element) => element.toString() == questionFormatted[0].toString());
 
             //finally update the values
-            realQuestion.timesSeen = questionFormatted[1] as int;
-            realQuestion.timesPassed = questionFormatted[2] as int;
+            realQuestion.timesSeen = int.parse(questionFormatted[1].toString());
+            realQuestion.timesPassed = int.parse(questionFormatted[2].toString());
             seenQuestions.add(realQuestion);
           }
 
@@ -96,7 +96,7 @@ class Global {
                 lessons[section]!.firstWhere((element) => element.toString() == lessonFormatted.toString());
 
             //finally update values
-            realLesson.completed = lessonFormatted[0] as bool;
+            realLesson.completed = (lessonFormatted[0].toString() == "true");
             seenLessons.add(realLesson);
           }
         } else {
