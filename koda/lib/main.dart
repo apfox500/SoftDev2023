@@ -13,6 +13,10 @@ import 'home.dart';
 import 'lesson.dart';
 import 'question.dart';
 
+//When I have trouble with pods and the app not builiding, i've found the following to be effective:
+//flutter clean; rm ios/Podfile ios/Podfile.lock pubspec.lock; rm -rf ios/Pods ios/Runner.xcworkspace; flutter run
+//need to have the flutter command working tho, so ryan you can't use it rn just text me
+
 //TODO: create a page with a python editor/console on it so they can actually code in app
 //TODO: setup profiles to keep and track progress as well as control settings
 //TODO: that one page where you take a picture of code and it translates to psuedocode/enlgish
@@ -50,11 +54,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //for now I will unlock some sections, but once user update is working it should be removed
-    //TODO: remove
-    global.unlocked[Section.dataTypes] = true;
-    global.unlocked[Section.arithmetic] = true;
-
     //actually build the app
     return MaterialApp(
       theme: ThemeData(

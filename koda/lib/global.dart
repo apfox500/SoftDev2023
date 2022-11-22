@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
@@ -39,6 +40,8 @@ class Global {
   Map<Section, bool> unlocked = {}; //have they unlocked the section?
   User? user;
   Map<Section, int> currentPlace = {}; //Section: index of lesson or question
+  List<Question> seenQuestions = []; //here:[Question], in firestore: [Question.toString, timesSeen, timesPassed]
+  List<Lesson> seenLessons = []; //here:[Lesson], in firestore: [Lesson, completed]
 
   Global({required this.user}) {
     for (Section section in Section.values) {
@@ -46,6 +49,7 @@ class Global {
       questions[section] = [];
       masterOrder[section] = [];
       currentPlace[section] = 0;
+      if (section == Section.arithmetic) {}
       unlocked[section] = false; //defaults to no unlocked sections
 
     }
@@ -54,13 +58,67 @@ class Global {
   Future<Map<Section, bool>> userUpdate() async {
     //This function pulls in all of the data from the database for the user
     //It will get: current progress, unlocked, historic passrates and seen questions
-    if (user != null) {
-      //TODO: implement userUpdate
 
+    CollectionReference db = FirebaseFirestore.instance.collection("Users");
+    if (user != null) {
+      await db.doc(user!.uid).get().then((DocumentSnapshot doc) {
+        if (doc.exists) {
+          final data = doc.data() as Map<String, dynamic>;
+          //this actually gets what the user has seen
+          currentPlace = (data["currentPlace"] as Map<String, dynamic>)
+              .map((key, value) => MapEntry(Section.values.byName(key), value as int));
+          unlocked = (data["unlocked"] as Map<String, dynamic>)
+              .map((key, value) => MapEntry(Section.values.byName(key), value as bool));
+
+          //update seen questions
+          for (dynamic question in (data["seenQuestions"] ?? []) as List<dynamic>) {
+            List<dynamic> questionFormatted =
+                question as List<dynamic>; //[Question.toString, timesSeen, timesPassed]
+            List<String> indentifiers = questionFormatted[0].toString().split("|");
+            //[section, ... ]
+            Section section = Section.values.byName(indentifiers[0]);
+            Question realQuestion = questions[section]!
+                .firstWhere((element) => element.toString() == questionFormatted[0].toString());
+
+            //finally update the values
+            realQuestion.timesSeen = questionFormatted[1] as int;
+            realQuestion.timesPassed = questionFormatted[2] as int;
+            seenQuestions.add(realQuestion);
+          }
+
+          //update seen lessons
+          for (dynamic lesson in (data["lessons"] ?? []) as List<dynamic>) {
+            List<dynamic> lessonFormatted = lesson as List<dynamic>; //[Lesson as a string, completed]
+            List<String> indentifiers = lessonFormatted[0].toString().split("|");
+            //[section, lesson#, ... ]
+            Section section = Section.values.byName(indentifiers[0]);
+            Lesson realLesson =
+                lessons[section]!.firstWhere((element) => element.toString() == lessonFormatted.toString());
+
+            //finally update values
+            realLesson.completed = lessonFormatted[0] as bool;
+            seenLessons.add(realLesson);
+          }
+        } else {
+          //document doesn't exist, so rn we will create an empty one
+          //we know they are a new user so imma go ahead and unlock datatypes for them
+          unlocked[Section.dataTypes] = true;
+          db.doc(user!.uid).set({
+            "currentPlace": currentPlace.map((key, value) => MapEntry(key.toString(), value)),
+            "unlocked": unlocked.map((key, value) => MapEntry(key.name, value)),
+            "seenQuestions": [],
+            "seenLessons": [],
+          });
+        }
+      });
     }
 
     //in the end we return our unlocked(this is for the future building on the home page)
     return unlocked;
+  }
+
+  Future<void> syncUserData() async {
+    //TODO implement syncing user data
   }
 
   void signout() {
@@ -69,15 +127,17 @@ class Global {
     for (Section section in Section.values) {
       currentPlace[section] = 0;
       unlocked[section] = false; //defaults to no unlocked sections
-      for (Question question in questions[section]!) {
+      for (Question question in seenQuestions) {
         //delete all possible question data
         question.timesSeen = 0;
         question.timesPassed = 0;
       }
-      for (Lesson lesson in lessons[section]!) {
+      seenQuestions = [];
+      for (Lesson lesson in seenLessons) {
         //delete all possible lesson data
         lesson.completed = false;
       }
+      seenLessons = [];
     }
   }
 }

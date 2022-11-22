@@ -5,6 +5,7 @@ import 'background.dart';
 import 'bottom_buttons.dart';
 import 'global.dart';
 import 'lesson.dart';
+import 'lesson_page.dart';
 import 'question.dart';
 import 'question_page.dart';
 
@@ -34,10 +35,8 @@ class _HomePageState extends State<HomePage> {
                 future: unlocked,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    List<Section> unlockedSections = global.masterOrder.keys
-                        .toList()
-                        .where((element) => global.unlocked[element]!)
-                        .toList();
+                    List<Section> unlockedSections =
+                        global.masterOrder.keys.toList().where((element) => global.unlocked[element]!).toList();
                     return ListView.builder(
                       //Using a listview here to geerate a start for every section that they have unlocked
                       itemCount: unlockedSections.length,
@@ -57,15 +56,13 @@ class _HomePageState extends State<HomePage> {
 
                                 Widget page = HomePage(global);
                                 try {
-                                  if (global.masterOrder[unlockedSections[index]]![currentPlace]
-                                      is Question) {
-                                    page = QuestionPage(global,
-                                        global.masterOrder[unlockedSections[index]]![currentPlace]);
-                                  } else if (global
-                                          .masterOrder[unlockedSections[index]]![currentPlace]
+                                  if (global.masterOrder[unlockedSections[index]]![currentPlace] is Question) {
+                                    page = QuestionPage(
+                                        global, global.masterOrder[unlockedSections[index]]![currentPlace]);
+                                  } else if (global.masterOrder[unlockedSections[index]]![currentPlace]
                                       is Lesson) {
-                                    page = LessonPage(global,
-                                        global.masterOrder[unlockedSections[index]]![currentPlace]);
+                                    page = LessonPage(
+                                        global, global.masterOrder[unlockedSections[index]]![currentPlace]);
                                   }
                                 } catch (_) {}
 
