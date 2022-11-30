@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:flutter/material.dart';
 
 import 'lesson.dart';
 import 'question.dart';
@@ -42,6 +43,12 @@ class Global {
   Map<Section, int> currentPlace = {}; //Section: index of lesson or question
   List<Question> seenQuestions = []; //here:[Question], in firestore: Question.toString-+-timesSeen-+-timesPassed
   List<Lesson> seenLessons = []; //here:[Lesson], in firestore: Lesson as a string-+-completed
+
+  static Color jet = const Color.fromARGB(255, 45, 45, 42);
+  static Color davysGrey = const Color.fromARGB(255, 76, 76, 71);
+  static Color coolGrey = const Color.fromARGB(255, 132, 143, 165);
+  static Color bittersweetShimmer = const Color.fromARGB(255, 193, 73, 83);
+  static Color bone = const Color.fromARGB(255, 229, 220, 197);
 
   Global({required this.user}) {
     for (Section section in Section.values) {

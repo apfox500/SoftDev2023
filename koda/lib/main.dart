@@ -69,8 +69,8 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: ThemeData(
         //dark theme
-        colorSchemeSeed: Colors
-            .purple, //TODO: choose main color/color scheme for app, apparently I suck at ui so someone else go!
+        colorSchemeSeed: Global
+            .coolGrey, //TODO: choose main color/color scheme for app, apparently I suck at ui so someone else go!
         brightness: Brightness.dark,
       ),
       initialRoute: FirebaseAuth.instance.currentUser == null

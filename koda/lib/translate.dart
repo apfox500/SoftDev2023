@@ -20,14 +20,9 @@ class _TranslatePageState extends State<TranslatePage> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: backgroundDecoration(context),
-        child: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Center(),
-        ),
+      backgroundColor: Global.davysGrey,
+      body: const SafeArea(
+        child: Center(),
       ),
       bottomNavigationBar: FooterButtons(
         global,

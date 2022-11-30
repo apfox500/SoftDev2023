@@ -9,8 +9,8 @@ BoxDecoration backgroundDecoration(BuildContext context) {
         ? DecorationImage(
             fit: BoxFit.contain,
             opacity: .35,
-            colorFilter: ColorFilter.mode(Theme.of(context).primaryColor,
-                BlendMode.overlay), //big uggo fr like absolute shit pls change
+            colorFilter: ColorFilter.mode(
+                Theme.of(context).primaryColor, BlendMode.overlay), //big uggo fr like absolute shit pls change
             image: const AssetImage('assets/background.jpg'),
             repeat: ImageRepeat.repeat,
             matchTextDirection: true,
@@ -18,7 +18,7 @@ BoxDecoration backgroundDecoration(BuildContext context) {
         : DecorationImage(
             fit: BoxFit.cover,
             repeat: ImageRepeat.repeat,
-            colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.dstATop),
+            colorFilter: ColorFilter.mode(Color.fromARGB(255, 76, 76, 71), BlendMode.overlay),
             image: const AssetImage('assets/background.jpg'),
             matchTextDirection: true,
           ),
