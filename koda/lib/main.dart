@@ -15,10 +15,14 @@ import 'question.dart';
 
 //When I have trouble with pods and the app not builiding, i've found the following to be effective:
 //flutter clean; rm ios/Podfile ios/Podfile.lock pubspec.lock; rm -rf ios/Pods ios/Runner.xcworkspace; flutter run
+//--or--
+//flutter clean; rm macos/Podfile macos/Podfile.lock pubspec.lock; rm -rf macos/Pods macos/Runner.xcworkspace; flutter run
 //need to have the flutter command working tho, so ryan you can't use it rn just text me
 
+//Most important website ever:
+//https://www.generatormix.com/random-dinosaurs?number=1
+
 //TODO: create a page with a python editor/console on it so they can actually code in app
-//TODO: setup profiles to keep and track progress as well as control settings
 //TODO: that one page where you take a picture of code and it translates to psuedocode/enlgish
 //TODO: use routes instead of .push for the main pages(i think idk if its actually supposed to happen)
 void main() async {
@@ -40,6 +44,8 @@ void main() async {
   await getDataFromGoogleSheet(global);
 
   //profile stuff here for now
+  //but why sync here when it syncs when you open the home page?
+  //possibly remove
   if (user != null) {
     await global.userUpdate();
   }

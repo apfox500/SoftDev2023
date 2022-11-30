@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 import 'drag_and_drop.dart';
@@ -40,7 +38,7 @@ class Question extends Comparable {
     required this.type,
     required this.question,
     this.lesson,
-  }) {}
+  });
 
   List<List<dynamic>> generateOptions(BuildContext context, Global global) {
     List<List<dynamic>> ret = [
@@ -79,8 +77,7 @@ class Question extends Comparable {
     return this;
   }
 
-  Question setMultiple(
-      List<String> multipleOptions, List<String> correctQs, Map<String, String> explanations) {
+  Question setMultiple(List<String> multipleOptions, List<String> correctQs, Map<String, String> explanations) {
     this.multipleOptions = multipleOptions;
     this.correctQs = correctQs;
     this.explanations = explanations;
