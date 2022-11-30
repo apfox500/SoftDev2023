@@ -1,91 +1,97 @@
 import 'dart:convert' as convert;
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 
+import 'firebase_options.dart';
 import 'global.dart';
 import 'home.dart';
 import 'lesson.dart';
 import 'question.dart';
 
+//When I have trouble with pods and the app not builiding, i've found the following to be effective:
+//flutter clean; rm ios/Podfile ios/Podfile.lock pubspec.lock; rm -rf ios/Pods ios/Runner.xcworkspace; flutter run
+//--or--
+//flutter clean; rm macos/Podfile macos/Podfile.lock pubspec.lock; rm -rf macos/Pods macos/Runner.xcworkspace; flutter run
+//need to have the flutter command working tho, so ryan you can't use it rn just text me
+
+//Most important website ever:
+//https://www.generatormix.com/random-dinosaurs?number=1
+
 //TODO: create a page with a python editor/console on it so they can actually code in app
-//TODO: setup profiles to keep and track progress as well as control settings
 //TODO: that one page where you take a picture of code and it translates to psuedocode/enlgish
+//TODO: use routes instead of .push for the main pages(i think idk if its actually supposed to happen)
 void main() async {
-  //TODO: add in loading and timer while syncing lessons
+  runApp(
+    const Center(
+      child: CircularProgressIndicator(),
+    ),
+  );
+  //TODO: add in timer while syncing lessons
   ///Possibly use a future builder inside the app instead
+  /////initialize firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  User? user = FirebaseAuth.instance.currentUser;
   //instantiate our global variable
-  Global global = Global();
+  Global global = Global(user: user);
+  //get lesson plans
   await getDataFromGoogleSheet(global);
+
+  //profile stuff here for now
+  //but why sync here when it syncs when you open the home page?
+  //possibly remove
+  if (user != null) {
+    await global.userUpdate();
+  }
+
+  //open real app
   runApp(MyApp(global));
 }
 
 class MyApp extends StatelessWidget {
   const MyApp(this.global, {Key? key}) : super(key: key);
   final Global global;
+
   @override
   Widget build(BuildContext context) {
-    //Some hard coded lessons and questions for now
-    /* Lesson lesson1 = Lesson(
-      number: 0,
-      section: Section.dataTypes,
-      original: true,
-      goal: ["int", "float", "str", "bool"],
-      title: "Introduction to Data Types",
-      body: """In python there are 4 basic data types:\n
-       - Integers(called 'int') which are positive or negative whole numbers\n 
-       - Floats(called 'float') which are positive or negative deicmal numbers\n 
-       - String(called 'str') which are usually text, words, and sentences surronded by quotes\n
-       - Booleans(called 'bool') which are either true or false\n
-       \n
-       With these 4 basic data types you can do most of the basics of coding, and you need to be able to tell them apart and know when to use them""",
-    );
-    Question question1 = Question(
-      section: Section.dataTypes,
-      goal: ["int", "float", "str", "bool"],
-      introDiff: 2,
-      interDiff: 1,
-      type: QuestionType.matching,
-      question: "Match the following to the correct data type",
-      lesson: 0,
-    ).setMatching(
-      {"1.5": "float", "Hello": "str", "2": "int", "true": "bool"},
-    );
-    Question question2 = Question(
-            section: Section.dataTypes,
-            goal: ["str"],
-            introDiff: 2,
-            interDiff: 1,
-            type: QuestionType.multiple,
-            question: "Which is the correct way to declare a String(str)?")
-        .setMultiple(
-      ['"Hello World"', 'Hello World', '"Hello" "World"', '("Hello World")'],
-      ['"Hello World"'],
-      {
-        '("Hello World")':
-            'While the quotes are correct, parenthese aren\'t needed for strings so "Hello World" is a better choice'
-      },
-    );
-    global.lessons[Section.dataTypes]!.add(lesson1);
-    global.questions[Section.dataTypes]!.add(question1);
-    global.masterOrder[Section.dataTypes] = [lesson1, question1, question2]; */
-
     //actually build the app
     return MaterialApp(
       theme: ThemeData(
         //light theme
-        colorSchemeSeed: Colors.purple,
+        colorSchemeSeed: Colors.purple, //currently this is big uggo
         brightness: Brightness.light,
       ),
       darkTheme: ThemeData(
         //dark theme
-        colorSchemeSeed: Colors
-            .purple, //TODO: choose main color/color scheme for app, apparently I suck at ui so someone else go!
+        colorSchemeSeed: Global
+            .coolGrey, //TODO: choose main color/color scheme for app, apparently I suck at ui so someone else go!
         brightness: Brightness.dark,
       ),
-      home: HomePage(global),
+      initialRoute: FirebaseAuth.instance.currentUser == null
+          ? '/sign-in'
+          : '/home', //this way, only signed in users can use the app
       debugShowCheckedModeBanner: false,
+      routes: {
+        '/sign-in': (context) {
+          return SignInScreen(
+            providers: global.providers,
+            actions: [
+              AuthStateChangeAction<SignedIn>((context, state) {
+                Navigator.pushReplacementNamed(context, '/home');
+              }),
+            ],
+          );
+        },
+        '/home': (context) {
+          return HomePage(global);
+        }
+      },
       //debugShowMaterialGrid: true,
     );
   }
@@ -93,6 +99,7 @@ class MyApp extends StatelessWidget {
 
 //Function to load in data from the google sheet
 Future<void> getDataFromGoogleSheet(Global global) async {
+  //TODO wrap in a try catch so errors in the google sheet wont fuck us over
   //loads in a [JSON, JSON] for our questions
   Response data = await http.get(
     Uri.parse(
@@ -181,7 +188,6 @@ Future<void> getDataFromGoogleSheet(Global global) async {
   }
 
   //and now the lessons
-  //TODO: get the lessons from the google sheet
   for (dynamic data in jsonAppData[1]) {
     Lesson lesson = Lesson(
       number: double.parse(data['number'].toString()),
@@ -203,12 +209,10 @@ Future<void> getDataFromGoogleSheet(Global global) async {
   //possibly an algoritihim like add 2.5 to the actual lesson number and put it and its questions in there?
   global.masterOrder.forEach((Section section, List<dynamic> value) {
     //first we add in all of our lessons, sorted by number
-    List<Lesson> orgLessons = global.lessons[section]!
-        .where((element) => element.number % 1 == 0)
-        .toList(); //original lessons
-    List<Lesson> remLessons = global.lessons[section]!
-        .where((element) => element.number % 1 != 0)
-        .toList(); //remediation lessons
+    List<Lesson> orgLessons =
+        global.lessons[section]!.where((element) => element.number % 1 == 0).toList(); //original lessons
+    List<Lesson> remLessons =
+        global.lessons[section]!.where((element) => element.number % 1 != 0).toList(); //remediation lessons
     List<Question> questions = global.questions[section]!
         .where((element) => element.lesson != null)
         .toList(); //we only want questions paired with lessons in the master order
@@ -223,7 +227,7 @@ Future<void> getDataFromGoogleSheet(Global global) async {
         return a.compareTo(b);
       }),
     );
-    print(holder);
+    //print(holder);
     global.masterOrder[section] = holder;
   });
 }

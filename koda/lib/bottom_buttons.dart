@@ -14,7 +14,8 @@ class FooterButtons extends StatelessWidget {
   final String page; //page that currently on
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      color: Global.jet,
       height: buttonHeight,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

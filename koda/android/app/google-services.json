@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "636037073970",
+    "project_id": "koda-80dc1",
+    "storage_bucket": "koda-80dc1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:636037073970:android:8e5e949ab464ea162fc02b",
+        "android_client_info": {
+          "package_name": "com.example.koda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "636037073970-5h8j3ru6jnnl7ocnbrl1tdlvcfh0jck7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSuPeEAptpCZggE29FtiZIr2WSNPwlQIs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "636037073970-5h8j3ru6jnnl7ocnbrl1tdlvcfh0jck7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "636037073970-r7ii91rltkhrjf40sn9lknm8dsf4j483.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.koda"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
