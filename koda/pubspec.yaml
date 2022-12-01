@@ -34,3 +34,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+  fonts:
+    - family: SpaceGrotesque
+      fonts: 
+        - asset: assets/SpaceGrotesk-VariableFont_wght.ttf
