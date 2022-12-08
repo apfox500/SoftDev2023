@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'background.dart';
 import 'bottom_buttons.dart';
 import 'global.dart';
 

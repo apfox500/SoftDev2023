@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:koda/algorithm.dart';
 import 'package:page_transition/page_transition.dart';
 
-import 'background.dart';
 import 'bottom_buttons.dart';
 import 'global.dart';
 import 'home.dart';
@@ -34,7 +34,7 @@ class _QuestionPageState extends State<QuestionPage> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: backgroundDecoration(context),
+        //decoration: backgroundDecoration(context),
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(15.0),
@@ -93,11 +93,9 @@ class _QuestionPageState extends State<QuestionPage> {
                               List<String> neededExplains = [];
                               widget.question.timesSeen++;
 
-                              //TODO: figure out how to move on to question(like difficulty, number of, etc.)
-                              // for now I will use the masterOrder list
-
                               //Grading the question
                               if (widget.question.type == QuestionType.short) {
+                                //TODO: short answer grading
                               } else {
                                 //This button is not available for matching, so this can only be choice and select
                                 List<String> choices = optionsMaster[1].cast<String>();
@@ -178,7 +176,8 @@ class ResponseDialog extends StatelessWidget {
             children: [
               ElevatedButton(
                   onPressed: () {
-                    //Stuff to go to next page
+                    navigatePage(global, context, question.section, question: question);
+                    /* //Stuff to go to next page
                     int currentPlace = global.currentPlace[question.section]!;
                     global.currentPlace[question.section] = currentPlace + 1;
                     currentPlace = global.currentPlace[question.section]!;
@@ -203,7 +202,7 @@ class ResponseDialog extends StatelessWidget {
                         child: page,
                         type: PageTransitionType.fade,
                       ),
-                    );
+                    ); */
                   },
                   child: const Text("Continue"))
             ],
@@ -238,16 +237,11 @@ class ResponseDialog extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         //Stuff to restart this page fresh
+                        //TODO: update to navigatePage()
                         int currentPlace = global.currentPlace[question.section]!;
 
-                        Widget page = HomePage(global);
-                        try {
-                          if (global.masterOrder[question.section]![currentPlace] is Question) {
-                            page = QuestionPage(global, global.masterOrder[question.section]![currentPlace]);
-                          } else if (global.masterOrder[question.section]![currentPlace] is Lesson) {
-                            page = LessonPage(global, global.masterOrder[question.section]![currentPlace]);
-                          }
-                        } catch (_) {}
+                        Widget page = QuestionPage(global, global.masterOrder[question.section]![currentPlace]);
+
                         Navigator.push(
                           context,
                           PageTransition(

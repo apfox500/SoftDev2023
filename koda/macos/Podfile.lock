@@ -618,7 +618,7 @@ PODS:
   - Firebase/Firestore (10.2.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 10.2.0)
-  - firebase_auth (4.1.3):
+  - firebase_auth (4.1.5):
     - Firebase/Auth (~> 10.2.0)
     - Firebase/CoreOnly (~> 10.2.0)
     - firebase_core
@@ -775,7 +775,7 @@ SPEC CHECKSUMS:
   cloud_firestore: 5bfd8f92a2f11f9d25a0ee69303ca069cadc7637
   desktop_webview_auth: 9bba53a29c9bc6a4ff621fd0ebfbb18856c4dada
   Firebase: a3ea7eba4382afd83808376edb99acdaff078dcf
-  firebase_auth: ea0343311a727c12ca27aeab94c2e2fe2a6cc015
+  firebase_auth: 89ed93a8d1d8f657fec8fe149bdeeb02e55c92d4
   firebase_core: f6f75d92dcdd5ef1b43876017affde02b7b402ec
   FirebaseAuth: 08e7739244eeae5216d0a3f8d9f16a76be9c252e
   FirebaseCore: 813838072b797b64f529f3c2ee35e696e5641dd1

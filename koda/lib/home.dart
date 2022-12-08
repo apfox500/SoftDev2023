@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:koda/algorithm.dart';
 
 import 'bottom_buttons.dart';
 import 'global.dart';
-import 'lesson.dart';
-import 'lesson_page.dart';
 import 'question.dart';
-import 'question_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage(this.global, {Key? key}) : super(key: key);
@@ -57,9 +54,11 @@ class _HomePageState extends State<HomePage> {
                           itemBuilder: ((context, index) {
                             double progress = 0;
                             if (global.masterOrder[unlockedSections[index]]!.isNotEmpty) {
+                              //this checks to make sure that there is in fact a masterOrder to use
                               progress = (global.currentPlace[unlockedSections[index]]!) /
                                   global.masterOrder[unlockedSections[index]]!.length;
-                            } else {}
+                              //Then do the math to find how what percent they are at
+                            }
 
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -74,7 +73,9 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 onTap: () {
                                   if (progress < 1) {
-                                    int currentPlace = global.currentPlace[unlockedSections[index]]!;
+                                    //only do smt if they haven't completed the section
+                                    navigatePage(global, context, unlockedSections[index], forwards: false);
+                                    /* int currentPlace = global.currentPlace[unlockedSections[index]]!;
 
                                     Widget page = HomePage(global);
                                     try {
@@ -95,18 +96,22 @@ class _HomePageState extends State<HomePage> {
                                         type: PageTransitionType.fade,
                                         fullscreenDialog: true,
                                         child: page,
-                                      ),
-                                    );
+                                      ), 
+                                    );*/
                                   }
                                 },
-                                title: Text(global.sectionNames[unlockedSections[index]]!),
+                                //TODO: make a long tap where they can view all completed lessons, or quiz themselves, or reset their progress
+                                ///I', thinking some kind of expansion widget? modal sheet could also work
+                                title: Text(Global.sectionNames[unlockedSections[index]]!),
                                 subtitle: Text('Progress: ${(progress * 100).round()}%'),
                               ),
                             );
                           }),
                         );
                       } else {
-                        return const CircularProgressIndicator(); //lil baby loading screen while we get user specific data
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        ); //lil baby loading screen while we get user specific data
                       }
                     }),
               ),

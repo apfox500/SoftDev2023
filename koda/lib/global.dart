@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'lesson.dart';
 import 'question.dart';
 
+//TODO: make these comments the way they are supposed to be
 class Global {
   //This is where all global variables will go bc flutter isn't really supposed to have globals
   Map<Section, List<Lesson>> lessons = {}; //section: [lessons]
@@ -16,7 +17,7 @@ class Global {
   //for now i will just be hardcoding in a plan, but it should be dynamic based on whether they pass questions, what theyve seen etc.
   Map<Section, List<dynamic>> masterOrder =
       {}; //section:[lesson1, question 1.1, question 1.2, lesson 2, question 2.1 ...]
-  Map<Section, String> sectionNames = {
+  static Map<Section, String> sectionNames = {
     Section.syntax: "Python Basics: Syntax",
     Section.dataTypes: "Python Basics: Data Types",
     Section.arithmetic: "Python Basics: Artimetic Operators",

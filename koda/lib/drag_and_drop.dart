@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:koda/algorithm.dart';
 
 import 'global.dart';
-import 'home.dart';
-import 'lesson.dart';
-import 'lesson_page.dart';
 import 'question.dart';
-import 'question_page.dart';
 
 class DragNDrop extends StatefulWidget {
   const DragNDrop(this.question, this.global, {Key? key}) : super(key: key);
@@ -128,10 +124,10 @@ class _DragNDropState extends State<DragNDrop> {
 
               ElevatedButton(
                 onPressed: () {
-                  widget.question.timesSeen++;
                   //TODO: figure out how to move on to question(like difficulty, number of, etc.)
                   // for now I will use the masterOrder list
-                  int currentPlace = global.currentPlace[widget.question.section]!;
+                  navigatePage(global, context, widget.question.section, question: widget.question);
+                  /* int currentPlace = global.currentPlace[widget.question.section]!;
                   global.currentPlace[widget.question.section] = currentPlace + 1;
                   currentPlace = global.currentPlace[widget.question.section]!;
 
@@ -155,7 +151,7 @@ class _DragNDropState extends State<DragNDrop> {
                       child: page,
                       type: PageTransitionType.fade,
                     ),
-                  );
+                  ); */
                 },
                 child: const Text("Continue"),
               ),

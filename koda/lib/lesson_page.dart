@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:koda/algorithm.dart';
 
-import 'background.dart';
 import 'bottom_buttons.dart';
 import 'global.dart';
-import 'home.dart';
 import 'lesson.dart';
-import 'question.dart';
-import 'question_page.dart';
 
 class LessonPage extends StatefulWidget {
   const LessonPage(this.global, this.lesson, {Key? key}) : super(key: key);
@@ -27,14 +23,14 @@ class _LessonPageState extends State<LessonPage> {
         page: "lesson",
       ),
       resizeToAvoidBottomInset: false,
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: backgroundDecoration(context),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListView(
+      backgroundColor: Global.davysGrey,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
+            //should let us scroll if there is a prticularly long lesson
+
+            child: Column(
               children: [
                 Text(
                   widget.lesson.title,
@@ -49,9 +45,8 @@ class _LessonPageState extends State<LessonPage> {
                 ),
                 ElevatedButton(
                     onPressed: () async {
-                      //TODO: figure out how to move on to question(like difficulty, number of, etc.)
-                      // for now I will use the masterOrder list
-                      int currentPlace = global.currentPlace[widget.lesson.section]!;
+                      navigatePage(global, context, widget.lesson.section, lesson: widget.lesson);
+                      /* int currentPlace = global.currentPlace[widget.lesson.section]!;
                       global.currentPlace[widget.lesson.section] = currentPlace + 1;
                       currentPlace = global.currentPlace[widget.lesson.section]!;
 
@@ -76,7 +71,7 @@ class _LessonPageState extends State<LessonPage> {
                           child: page,
                           type: PageTransitionType.fade,
                         ),
-                      );
+                      ); */
                     },
                     child: const Text("Go to Questions"))
               ],
