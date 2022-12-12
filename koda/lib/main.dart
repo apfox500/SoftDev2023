@@ -19,6 +19,8 @@ import 'question.dart';
 //flutter clean; rm macos/Podfile macos/Podfile.lock pubspec.lock; rm -rf macos/Pods macos/Runner.xcworkspace; flutter run
 //need to have the flutter command working tho, so ryan you can't use it rn just text me
 
+//rm -R build; rm .dart_tool; rm .packages; rm -Rf ios/Pods; rm -Rf ios/.symlinks; rm -Rf ios/Flutter/Flutter.framework; rm -Rf ios/Flutter/Flutter.podspec; pod cache clean --all; cd ios > pod deintegrate; pod setup; arch -x86_64 pod install cd ..; flutter clean -v; flutter pub get; flutter clean && flutter run
+
 //Most important website ever:
 //https://www.generatormix.com/random-dinosaurs?number=1
 
@@ -62,15 +64,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     //actually build the app
     return MaterialApp(
-      theme: ThemeData(
+      /* theme: ThemeData(
         //light theme
-        colorSchemeSeed: Colors.purple, //currently this is big uggo
+        colorSchemeSeed: Global.bone,
         brightness: Brightness.light,
-      ),
+      ), */
       darkTheme: ThemeData(
         //dark theme
-        colorSchemeSeed: Global
-            .coolGrey, //TODO: choose main color/color scheme for app, apparently I suck at ui so someone else go!
+        colorSchemeSeed: Global.coolGrey,
         brightness: Brightness.dark,
       ),
       initialRoute: FirebaseAuth.instance.currentUser == null
@@ -133,7 +134,7 @@ Future<void> getDataFromGoogleSheet(Global global) async {
     //load in answers based off of type
     if (type == QuestionType.multiple || type == QuestionType.select) {
       //multiple choice
-      List<String> correctLettters = (data['correct'] as String).split(",");
+      List<String> correctLetters = (data['correct'] as String).split(", ");
       List<String> options = [];
       List<String> correctQs = [];
       Map<String, String> explanations = {};
@@ -150,7 +151,7 @@ Future<void> getDataFromGoogleSheet(Global global) async {
         if (option != "") {
           //only do stuff if it isn't empty
           options.add(option); //add to options
-          if (correctLettters.contains(letter)) correctQs.add(option); //add to correct if it is right
+          if (correctLetters.contains(letter)) correctQs.add(option); //add to correct if it is right
           String explain = data["exp$letter"];
           if (explain != "") explanations[option] = explain; //only add an explanation if one exists
         }

@@ -6,17 +6,10 @@ import 'package:flutter/material.dart';
 import 'lesson.dart';
 import 'question.dart';
 
+//TODO: make these comments the way they are supposed to be
 class Global {
-  //This is where all global variables will go bc flutter isn't really supposed to have globals
-  Map<Section, List<Lesson>> lessons = {}; //section: [lessons]
-
-  Map<Section, List<Question>> questions = {}; //section:[questions]
-  //TODO: create an algorithim for lessons rather than just hard code - Andrew has a voicenote with
-  ///his plan of how to do it, tlak to him or let him do it
-  //for now i will just be hardcoding in a plan, but it should be dynamic based on whether they pass questions, what theyve seen etc.
-  Map<Section, List<dynamic>> masterOrder =
-      {}; //section:[lesson1, question 1.1, question 1.2, lesson 2, question 2.1 ...]
-  Map<Section, String> sectionNames = {
+  //Static/copnstant variables we want to be global
+  static Map<Section, String> sectionNames = {
     Section.syntax: "Python Basics: Syntax",
     Section.dataTypes: "Python Basics: Data Types",
     Section.arithmetic: "Python Basics: Artimetic Operators",
@@ -30,6 +23,21 @@ class Global {
     Section.functions: "Advanced Python: Making your own functions",
     Section.classes: "Master Python: Making your own classes",
   }; //Section:expanded section name that can actually be displayed
+  //TODO: add in more of these messages
+  static List<String> failedMessages = ["Better luck next time", "This close... lets try again"];
+  static List<String> passedMessages = ["Congratulations", "Knew you were smart!"];
+  static List<String> continueMessages = ["Move on", "Continue", "Keep Going"];
+
+  //This is where all global variables will go bc flutter isn't really supposed to have globals
+  Map<Section, List<Lesson>> lessons = {}; //section: [lessons]
+
+  Map<Section, List<Question>> questions = {}; //section:[questions]
+  //TODO: create an algorithim for lessons rather than just hard code - Andrew has a voicenote with
+  ///his plan of how to do it, tlak to him or let him do it
+  //for now i will just be hardcoding in a plan, but it should be dynamic based on whether they pass questions, what theyve seen etc.
+  Map<Section, List<dynamic>> masterOrder =
+      {}; //section:[lesson1, question 1.1, question 1.2, lesson 2, question 2.1 ...]
+
   //TODO: rn everything is like one class(intro and intermediate are combined), and they could
   ///techincally start anywhere, so we will need to figure out if there is intro/inter mediate or how
   ///to unlock sections etc.
@@ -41,9 +49,12 @@ class Global {
   Map<Section, bool> unlocked = {}; //have they unlocked the section?
   User? user;
   Map<Section, int> currentPlace = {}; //Section: index of lesson or question
-  List<Question> seenQuestions = []; //here:[Question], in firestore: Question.toString-+-timesSeen-+-timesPassed
-  List<Lesson> seenLessons = []; //here:[Lesson], in firestore: Lesson as a string-+-completed
-
+  Set<Question> seenQuestions = {}; //here:[Question], in firestore: Question.toString-+-timesSeen-+-timesPassed
+  Set<Lesson> seenLessons = {}; //here:[Lesson], in firestore: Lesson as a string-+-completed
+  int questionGoal = 15; //number of question they want to reach every day
+  Map<String, int> questionDailyHistory = {}; //day(MM-DD-YY format): how many questions they did that day
+  List<Question> priority = []; //The list of priority questions to display before continuing on with masterOrder
+  Lesson? priorityLesson;
   static Color jet = const Color.fromARGB(255, 45, 45, 42);
   static Color davysGrey = const Color.fromARGB(255, 76, 76, 71);
   static Color coolGrey = const Color.fromARGB(255, 132, 143, 165);
@@ -76,6 +87,9 @@ class Global {
               .map((key, value) => MapEntry(Section.values.byName(key), value as int));
           unlocked = (data["unlocked"] as Map<String, dynamic>)
               .map((key, value) => MapEntry(Section.values.byName(key), value as bool));
+          questionGoal = data["questionGoal"];
+          questionDailyHistory =
+              (data["dailyHistory"] as Map<String, dynamic>).map((key, value) => MapEntry(key, value as int));
 
           //update seen questions
           for (dynamic question in (data["seenQuestions"] ?? []) as List<dynamic>) {
@@ -115,6 +129,8 @@ class Global {
             "unlocked": unlocked.map((key, value) => MapEntry(key.name, value)),
             "seenQuestions": [],
             "seenLessons": [],
+            "questionGoal": questionGoal,
+            "dailyHistory": {},
           });
         }
       });
@@ -124,9 +140,11 @@ class Global {
     return unlocked;
   }
 
+  ///This function syncs all of the users data into the cloud
+  ///
+  ///Uses the .update because if we don't have to overwrite we dont want to obviously
   Future<void> syncUserData() async {
     //TODO implement syncing user data
-    //This function syncs all of the users data into the cloud, using the .update because if we don't have to overwrite we dont want to obviously
     CollectionReference db = FirebaseFirestore.instance.collection("Users");
     if (user != null) {
       List<String> formattedSeenQuestions =
@@ -137,12 +155,14 @@ class Global {
         "unlocked": unlocked.map((key, value) => MapEntry(key.name, value)),
         "seenQuestions": formattedSeenQuestions,
         "seenLessons": formattedSeenLessons,
+        "questionGoal": questionGoal,
+        "dailyHistory": questionDailyHistory,
       });
     }
   }
 
+  ///reset everything to blank so there is no risk of carryover data from other users
   void signout() {
-    //reset everything to blank so there is no risk of carryover data
     user = null;
     for (Section section in Section.values) {
       currentPlace[section] = 0;
@@ -152,12 +172,12 @@ class Global {
         question.timesSeen = 0;
         question.timesPassed = 0;
       }
-      seenQuestions = [];
+      seenQuestions = {};
       for (Lesson lesson in seenLessons) {
         //delete all possible lesson data
         lesson.completed = false;
       }
-      seenLessons = [];
+      seenLessons = {};
     }
   }
 }

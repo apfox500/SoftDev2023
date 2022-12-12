@@ -1,29 +1,93 @@
 import 'package:flutter/material.dart';
+import 'package:koda/algorithm.dart';
 import 'package:page_transition/page_transition.dart';
 
-import 'background.dart';
 import 'bottom_buttons.dart';
 import 'global.dart';
-import 'home.dart';
-import 'lesson.dart';
-import 'lesson_page.dart';
 import 'question.dart';
 
 class QuestionPage extends StatefulWidget {
-  const QuestionPage(this.global, this.question, {Key? key}) : super(key: key);
+  const QuestionPage(this.global, this.question, {Key? key, this.passed, this.failed}) : super(key: key);
   final Global global;
   final Question question;
+  final void Function()? passed;
+  final void Function()? failed;
   @override
   State<QuestionPage> createState() => _QuestionPageState();
 }
 
 class _QuestionPageState extends State<QuestionPage> {
+  late void Function() passed;
+  late void Function() failed;
+  @override
+  void initState() {
+    super.initState();
+    passed = widget.passed ?? defaultPassed;
+    failed = widget.failed ?? defaultFailed;
+  }
+
+  ///The default function if someone completes a question, it saves their progress and moves them forward
+  void defaultPassed() {
+    widget.question.timesSeen++;
+    widget.question.timesPassed++;
+    widget.global.seenQuestions.add(widget.question);
+    widget.global.syncUserData();
+    navigatePage(
+      widget.global,
+      context,
+      widget.question.section,
+      question: widget.question,
+    );
+  }
+
+  ///The default function if someone fails a question, it saves their progress and doesn't move them(resets the
+  ///question)
+  void defaultFailed() {
+    widget.question.timesSeen++;
+    widget.global.seenQuestions.add(widget.question);
+    widget.global.syncUserData();
+    navigatePage(
+      widget.global,
+      context,
+      widget.question.section,
+      question: widget.question,
+      forwards: false,
+    );
+  }
+
+  ///Returns the proper widget depending on this [question]'s [QuestionType]
+  Widget _getQuestion(Question question) {
+    if (question.type == QuestionType.multiple) {
+      return MultipleChoiceQuestion(
+        question: question,
+        passed: passed,
+        failed: failed,
+      );
+    } else if (question.type == QuestionType.select) {
+      return MultipleSelectQuestion(
+        question: question,
+        passed: passed,
+        failed: failed,
+      );
+    } else if (question.type == QuestionType.matching) {
+      return DragAndDropQuestion(
+        question: question,
+        passed: passed,
+      );
+    } else if (question.type == QuestionType.short) {
+      return ShortAnswerQuestion(
+        question: question,
+        passed: passed,
+        failed: failed,
+      );
+    } else {
+      return const Text("Uh oh\nSomeone Broke Me\n:.(");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Global global = widget.global;
-    List<List<dynamic>> optionsMaster =
-        widget.question.generateOptions(context, global); //[[options], [choices], [selected]]
-    List<Widget> options = optionsMaster[0].cast<Widget>();
 
     return Scaffold(
       bottomNavigationBar: FooterButtons(
@@ -31,123 +95,35 @@ class _QuestionPageState extends State<QuestionPage> {
         page: "question",
       ),
       resizeToAvoidBottomInset: false,
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: backgroundDecoration(context),
-        child: Center(
+      backgroundColor: Global.davysGrey,
+      body: Center(
+        child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                    SizedBox(height: MediaQuery.of(context).size.height * .01), //Padding
-                    Text(
-                      widget.question.question, //The question itself
-                      style: Theme.of(context).textTheme.headline6,
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.height * .1), //Padding
-                  ] +
-                  options + //Actually add in the options based on the type of question
-                  [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .1,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            //stuff to go back
-                            int currentPlace =
-                                global.masterOrder[widget.question.section]!.indexOf(widget.question) - 1;
-                            global.currentPlace[widget.question.section] = currentPlace;
-
-                            Widget page = HomePage(global);
-                            if (global.masterOrder[widget.question.section]![currentPlace] is Question) {
-                              page = QuestionPage(
-                                  global, global.masterOrder[widget.question.section]![currentPlace]);
-                            } else if (global.masterOrder[widget.question.section]![currentPlace] is Lesson) {
-                              page =
-                                  LessonPage(global, global.masterOrder[widget.question.section]![currentPlace]);
-                            }
-
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                type: PageTransitionType.fade,
-                                fullscreenDialog: true,
-                                child: page,
-                              ),
-                            );
-                          },
-                          child: const Text("Go back"),
-                        ),
-                        Visibility(
-                          visible: widget.question.type !=
-                              QuestionType.matching, //hide if it is matching, probably also multiple choice
-                          child: ElevatedButton(
-                            onPressed: () {
-                              bool passed = true;
-                              List<String> neededExplains = [];
-                              widget.question.timesSeen++;
-
-                              //TODO: figure out how to move on to question(like difficulty, number of, etc.)
-                              // for now I will use the masterOrder list
-
-                              //Grading the question
-                              if (widget.question.type == QuestionType.short) {
-                              } else {
-                                //This button is not available for matching, so this can only be choice and select
-                                List<String> choices = optionsMaster[1].cast<String>();
-                                List<bool> selected = optionsMaster[2].cast<bool>();
-                                //Many ways you could grade this, I'm just creating a list of what
-                                //selected should look like, and then if each value is correct they move on
-                                List<bool> rightAnswers =
-                                    choices.map((e) => widget.question.correctQs!.contains(e)).toList();
-                                for (int i = 0; i < selected.length; i++) {
-                                  if (selected[i] != rightAnswers[i]) {
-                                    //They got something wrong
-                                    passed = false;
-                                    //if they selected a wrong answer we need to put why it was wrong
-                                    if (selected[i]) {
-                                      //this checks if we didn't offer an explanation, then the default is just saying it's wrong
-                                      neededExplains.add(widget.question.explanations![choices[i]] ??
-                                          "${choices[i]} is incorrect");
-                                    }
-                                  }
-                                }
-                                if (passed) {
-                                  widget.question.timesPassed++;
-                                  //TODO add in explanations for correct answers
-                                } else {
-                                  if (!selected.contains(true)) {
-                                    //if they put nothing lets tell them that
-                                    neededExplains.add(
-                                        "C'mon, you gotta choose something...even if its a guess"); //TODO this guy should be random
-                                  }
-                                }
-                              }
-
-                              //Then show a dialog to tell them if they were right or not
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return ResponseDialog(
-                                      global: global,
-                                      question: widget.question,
-                                      passed: passed,
-                                      explains: neededExplains,
-                                    );
-                                  });
-                            },
-                            child: const Text("Submit"),
-                          ),
-                        ),
-                      ],
+                _getQuestion(widget.question),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .1,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () => navigatePage(
+                        global,
+                        context,
+                        widget.question.section,
+                        forwards: false,
+                        backwards: true,
+                        question: widget.question,
+                      ),
+                      child: const Text("Go back"),
                     ),
                   ],
+                ),
+              ],
             ),
           ),
         ),
@@ -178,7 +154,8 @@ class ResponseDialog extends StatelessWidget {
             children: [
               ElevatedButton(
                   onPressed: () {
-                    //Stuff to go to next page
+                    navigatePage(global, context, question.section, question: question);
+                    /* //Stuff to go to next page
                     int currentPlace = global.currentPlace[question.section]!;
                     global.currentPlace[question.section] = currentPlace + 1;
                     currentPlace = global.currentPlace[question.section]!;
@@ -203,7 +180,7 @@ class ResponseDialog extends StatelessWidget {
                         child: page,
                         type: PageTransitionType.fade,
                       ),
-                    );
+                    ); */
                   },
                   child: const Text("Continue"))
             ],
@@ -238,16 +215,11 @@ class ResponseDialog extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         //Stuff to restart this page fresh
+                        //TODO: update to navigatePage()
                         int currentPlace = global.currentPlace[question.section]!;
 
-                        Widget page = HomePage(global);
-                        try {
-                          if (global.masterOrder[question.section]![currentPlace] is Question) {
-                            page = QuestionPage(global, global.masterOrder[question.section]![currentPlace]);
-                          } else if (global.masterOrder[question.section]![currentPlace] is Lesson) {
-                            page = LessonPage(global, global.masterOrder[question.section]![currentPlace]);
-                          }
-                        } catch (_) {}
+                        Widget page = QuestionPage(global, global.masterOrder[question.section]![currentPlace]);
+
                         Navigator.push(
                           context,
                           PageTransition(
