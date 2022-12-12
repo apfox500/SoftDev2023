@@ -134,7 +134,7 @@ Future<void> getDataFromGoogleSheet(Global global) async {
     //load in answers based off of type
     if (type == QuestionType.multiple || type == QuestionType.select) {
       //multiple choice
-      List<String> correctLettters = (data['correct'] as String).split(",");
+      List<String> correctLetters = (data['correct'] as String).split(", ");
       List<String> options = [];
       List<String> correctQs = [];
       Map<String, String> explanations = {};
@@ -151,7 +151,7 @@ Future<void> getDataFromGoogleSheet(Global global) async {
         if (option != "") {
           //only do stuff if it isn't empty
           options.add(option); //add to options
-          if (correctLettters.contains(letter)) correctQs.add(option); //add to correct if it is right
+          if (correctLetters.contains(letter)) correctQs.add(option); //add to correct if it is right
           String explain = data["exp$letter"];
           if (explain != "") explanations[option] = explain; //only add an explanation if one exists
         }

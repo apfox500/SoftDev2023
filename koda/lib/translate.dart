@@ -30,3 +30,56 @@ class _TranslatePageState extends State<TranslatePage> {
     );
   }
 }
+
+//Shitty prgram stolen from an AI
+String translateToPseudocode(String pythonCode) {
+  // Remove leading and trailing whitespace from the Python code
+  pythonCode = pythonCode.trim();
+
+  // Split the Python code into a list of lines
+  List<String> lines = pythonCode.split('\n');
+
+  // Initialize a string to hold the pseudocode
+  String pseudocode = '';
+
+  // Loop through each line of the Python code
+  for (String line in lines) {
+    // Remove leading and trailing whitespace from the line
+    line = line.trim();
+
+    // Skip empty lines
+    if (line.isEmpty) {
+      continue;
+    }
+
+    // Translate the Python code to pseudocode
+    if (line.startsWith('def ')) {
+      // Function definition
+      pseudocode += 'FUNCTION ${line.substring(4)}';
+    } else if (line.startsWith('if ')) {
+      // If statement
+      pseudocode += 'IF ${line.substring(3)} THEN';
+    } else if (line.startsWith('else:')) {
+      // Else statement
+      pseudocode += 'ELSE';
+    } else if (line.startsWith('for ')) {
+      // For loop
+      pseudocode += 'FOR ${line.substring(4)}';
+    } else if (line.startsWith('while ')) {
+      // While loop
+      pseudocode += 'WHILE ${line.substring(6)}';
+    } else if (line.endsWith(':')) {
+      // Indentation
+      pseudocode += '\t${line.substring(0, line.length - 1)}';
+    } else {
+      // Other lines
+      pseudocode += line;
+    }
+
+    // Add a newline character to the end of the pseudocode
+    pseudocode += '\n';
+  }
+
+  // Return the generated pseudocode
+  return pseudocode;
+}
