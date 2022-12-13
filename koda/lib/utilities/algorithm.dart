@@ -7,6 +7,7 @@ import '../screens/common/home.dart';
 import 'lesson.dart';
 import '../screens/common/lesson_page.dart';
 import '../screens/common/question_page.dart';
+import 'section.dart';
 
 //Eventually will want to have previous sections then the current one, but for now we will remain in each section
 //TODO: complete navigatePage algorithim

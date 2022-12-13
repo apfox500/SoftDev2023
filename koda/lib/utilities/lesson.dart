@@ -1,4 +1,5 @@
 import 'question.dart';
+import 'section.dart';
 
 class Lesson extends Comparable {
   final double number;

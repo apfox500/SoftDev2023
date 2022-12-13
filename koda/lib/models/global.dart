@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 
 import '../utilities/lesson.dart';
 import '../utilities/question.dart';
+import '../utilities/message_type.dart';
+import '../utilities/section.dart';
 
 ///Houses all global variables
 ///
@@ -389,11 +391,4 @@ class Global {
       return "Code got all fucky-wucky somewhere";
     }
   }
-}
-
-enum MessageType {
-  failed,
-  passed,
-  cont,
-  tryAgain,
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/global.dart';
 import '../utilities/question.dart';
+import '../utilities/message_type.dart';
 
 ///Builds a Widget specifically for Drag and Drop(Matching) Questions
 class DragAndDropQuestion extends StatefulWidget {

@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-
-import '../models/global.dart';
 import 'lesson.dart';
+import 'question_type.dart';
+import 'section.dart';
 
 class Question extends Comparable {
   final Section section;
@@ -103,73 +102,6 @@ class Question extends Comparable {
   }
 }
 
-enum QuestionType {
-  multiple,
-  select,
-  matching,
-  short,
-  code, //NOTE - code is experimental and as of rn is unuseable
-}
-
-enum Section {
-  syntax,
-  dataTypes,
-  arithmetic,
-  variables,
-  commonFunctions,
-  errors,
-  comparisonOperators,
-  ifs,
-  loops,
-  reference,
-  functions,
-  classes;
-
-  @override
-  String toString() => name;
-}
-
-QuestionType findType(String type) {
-  if (type == "Matching") {
-    return QuestionType.matching;
-  } else if (type == "Multiple Choice") {
-    return QuestionType.multiple;
-  } else if (type == "Short Answer") {
-    return QuestionType.short;
-  } else if (type == "Multiple Select") {
-    return QuestionType.select;
-  } else {
-    return QuestionType.code;
-  }
-}
-
-Section findSection(String section) {
-  if (section == "syntax") {
-    return Section.syntax;
-  } else if (section == "data types") {
-    return Section.dataTypes;
-  } else if (section == "arthmetic operators") {
-    return Section.arithmetic;
-  } else if (section == "variables") {
-    return Section.variables;
-  } else if (section == "common functions") {
-    return Section.commonFunctions;
-  } else if (section == "errors") {
-    return Section.errors;
-  } else if (section == "comparison operators") {
-    return Section.comparisonOperators;
-  } else if (section == "ifs") {
-    return Section.ifs;
-  } else if (section == "loops") {
-    return Section.loops;
-  } else if (section == "reference") {
-    return Section.reference;
-  } else if (section == "functions") {
-    return Section.functions;
-  } else {
-    return Section.classes;
-  }
-}
 
 /*
  * For coding questions
