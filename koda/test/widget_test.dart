@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:koda/global.dart';
+import 'package:koda/models/global.dart';
 
 import 'package:koda/main.dart';
 

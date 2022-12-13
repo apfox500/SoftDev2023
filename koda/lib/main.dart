@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 
-import 'firebase_options.dart';
-import 'global.dart';
-import 'home.dart';
-import 'lesson.dart';
-import 'question.dart';
+import 'providers/firebase_options.dart';
+import 'models/global.dart';
+import 'screens/common/home.dart';
+import 'utilities/lesson.dart';
+import 'utilities/question.dart';
 
 //When I have trouble with pods and the app not builiding, i've found the following to be effective:
 //flutter clean; rm ios/Podfile ios/Podfile.lock pubspec.lock; rm -rf ios/Pods ios/Runner.xcworkspace; flutter run
