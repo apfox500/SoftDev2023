@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../widgets/bottom_buttons.dart';
+import '../../widgets/footer_buttons.dart';
 import '../../models/global.dart';
 
 //TODO: are we still doing this? if so gotta start it and figure out what we want to do with it
@@ -31,7 +31,7 @@ class _TranslatePageState extends State<TranslatePage> {
   }
 }
 
-//Shitty prgram stolen from an AI
+//Shitty program stolen from an AI - feel free to use
 String translateToPseudocode(String pythonCode) {
   // Remove leading and trailing whitespace from the Python code
   pythonCode = pythonCode.trim();

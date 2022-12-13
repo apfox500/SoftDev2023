@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:koda/utilities/algorithm.dart';
 
 import '../../utilities/question_type.dart';
-import '../../widgets/bottom_buttons.dart';
+import '../../widgets/footer_buttons.dart';
 import '../../models/global.dart';
 import '../../utilities/question.dart';
 import '../../widgets/drag_and_drop_question.dart';
@@ -23,11 +23,13 @@ class QuestionPage extends StatefulWidget {
 class _QuestionPageState extends State<QuestionPage> {
   late void Function() passed;
   late void Function() failed;
+  late Global global;
   @override
   void initState() {
     super.initState();
     passed = widget.passed ?? defaultPassed;
     failed = widget.failed ?? defaultFailed;
+    global = widget.global;
   }
 
   ///The default function if someone completes a question, it saves their progress and moves them forward
@@ -91,8 +93,6 @@ class _QuestionPageState extends State<QuestionPage> {
 
   @override
   Widget build(BuildContext context) {
-    Global global = widget.global;
-
     return Scaffold(
       bottomNavigationBar: FooterButtons(
         global,

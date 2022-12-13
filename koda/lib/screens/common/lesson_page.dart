@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:koda/utilities/algorithm.dart';
 
-import '../../widgets/bottom_buttons.dart';
+import '../../widgets/footer_buttons.dart';
 import '../../models/global.dart';
 import '../../utilities/lesson.dart';
 
@@ -14,9 +14,16 @@ class LessonPage extends StatefulWidget {
 }
 
 class _LessonPageState extends State<LessonPage> {
+  late Global global;
+
+  @override
+  void initState() {
+    global = widget.global;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Global global = widget.global;
     return Scaffold(
       bottomNavigationBar: FooterButtons(
         global,

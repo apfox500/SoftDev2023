@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:koda/utilities/algorithm.dart';
 
 import '../../utilities/section.dart';
-import '../../widgets/bottom_buttons.dart';
+import '../../widgets/footer_buttons.dart';
 import '../../models/global.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,11 +13,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Future<Map<Section, bool>> unlocked;
+  late Global global;
+
+  @override
+  void initState() {
+    unlocked = widget.global.userUpdate();
+    global = widget.global; //so we don't have to type widget.global everytime
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    Global global = widget.global; //so we don't have to type widget.global everytime
-    Future<Map<Section, bool>> unlocked = global.userUpdate();
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Global.davysGrey,
@@ -25,6 +32,7 @@ class _HomePageState extends State<HomePage> {
         child: Center(
           child: Column(
             children: [
+              //title
               const Padding(
                 padding: EdgeInsets.only(bottom: 10),
                 child: Text(

@@ -25,6 +25,7 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
     super.initState();
     _matchingOptions = Map.from(widget.question.matchingOptions!);
     done = false;
+    _generate();
   }
 
   ///Fills the [_terms] and [_definitions] lists with thier appropriate widgets
@@ -131,7 +132,6 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
   @override
   Widget build(BuildContext context) {
     //fill the list if we have no widgets and aren't done yet
-    if (_definitions.isEmpty && !done) _generate();
     if (done) {
       return SizedBox(
         height: MediaQuery.of(context).size.height * .45,
@@ -188,7 +188,6 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
                 ),
               ),
             ),
-            //
             //Definitions
             Container(
               decoration:
