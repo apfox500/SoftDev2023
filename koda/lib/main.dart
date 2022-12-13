@@ -30,6 +30,7 @@ import 'question.dart';
 //TODO: rn everything is like one class(intro and intermediate are combined), and they could
 ///techincally start anywhere, so we will need to figure out if there is intro/inter mediate or how
 ///to unlock sections etc.
+//TODO: use testing to check widgets, methods, maybe whole app
 void main() async {
   runApp(
     const Center(

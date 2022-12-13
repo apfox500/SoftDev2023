@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'bottom_buttons.dart';
-import 'global.dart';
+import '../../widgets/bottom_buttons.dart';
+import '../../models/global.dart';
 
 //TODO: are we still doing this? if so gotta start it and figure out what we want to do with it
 

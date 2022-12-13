@@ -1,10 +1,10 @@
 import "package:flutter/material.dart";
-import 'package:koda/profile.dart';
-import 'package:koda/translate.dart';
+import 'package:koda/screens/common/profile.dart';
+import 'package:koda/screens/common/translate.dart';
 import 'package:page_transition/page_transition.dart';
 
-import 'global.dart';
-import 'home.dart';
+import '../models/global.dart';
+import '../screens/common/home.dart';
 
 double buttonHeight = 50;
 

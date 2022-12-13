@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:koda/algorithm.dart';
+import 'package:koda/utilities/algorithm.dart';
 
-import 'bottom_buttons.dart';
-import 'global.dart';
-import 'lesson.dart';
+import '../../widgets/bottom_buttons.dart';
+import '../../models/global.dart';
+import '../../utilities/lesson.dart';
 
 class LessonPage extends StatefulWidget {
   const LessonPage(this.global, this.lesson, {Key? key}) : super(key: key);

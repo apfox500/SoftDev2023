@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:koda/question.dart';
+import 'package:koda/utilities/question.dart';
 import 'package:page_transition/page_transition.dart';
 
-import 'global.dart';
-import 'home.dart';
+import '../models/global.dart';
+import '../screens/common/home.dart';
 import 'lesson.dart';
-import 'lesson_page.dart';
-import 'question_page.dart';
+import '../screens/common/lesson_page.dart';
+import '../screens/common/question_page.dart';
 
 //Eventually will want to have previous sections then the current one, but for now we will remain in each section
 //TODO: complete navigatePage algorithim

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:koda/algorithm.dart';
+import 'package:koda/utilities/algorithm.dart';
 
-import 'bottom_buttons.dart';
-import 'global.dart';
-import 'question.dart';
+import '../../widgets/bottom_buttons.dart';
+import '../../models/global.dart';
+import '../../utilities/question.dart';
+import '../../widgets/drag_and_drop_question.dart';
+import '../../widgets/multiple_choice_question.dart';
+import '../../widgets/multiple_select_question.dart';
+import '../../widgets/short_answer_question.dart';
 
 class QuestionPage extends StatefulWidget {
   const QuestionPage(this.global, this.question, {Key? key, this.passed, this.failed}) : super(key: key);

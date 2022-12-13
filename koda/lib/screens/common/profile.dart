@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'bottom_buttons.dart';
-import 'global.dart';
+import '../../widgets/bottom_buttons.dart';
+import '../../models/global.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage(this.global, {Key? key}) : super(key: key);

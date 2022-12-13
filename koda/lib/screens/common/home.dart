@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:koda/algorithm.dart';
+import 'package:koda/utilities/algorithm.dart';
 
-import 'bottom_buttons.dart';
-import 'global.dart';
-import 'question.dart';
+import '../../widgets/bottom_buttons.dart';
+import '../../models/global.dart';
+import '../../utilities/question.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage(this.global, {Key? key}) : super(key: key);
