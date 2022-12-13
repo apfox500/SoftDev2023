@@ -1,7 +1,7 @@
 import 'dart:convert' as convert;
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -27,6 +27,9 @@ import 'question.dart';
 //TODO: create a page with a python editor/console on it so they can actually code in app
 //TODO: that one page where you take a picture of code and it translates to psuedocode/enlgish
 //TODO: use routes instead of .push for the main pages(i think idk if its actually supposed to happen)
+//TODO: rn everything is like one class(intro and intermediate are combined), and they could
+///techincally start anywhere, so we will need to figure out if there is intro/inter mediate or how
+///to unlock sections etc.
 void main() async {
   runApp(
     const Center(
@@ -81,7 +84,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/sign-in': (context) {
           return SignInScreen(
-            providers: global.providers,
+            providers: Global.providers,
             actions: [
               AuthStateChangeAction<SignedIn>((context, state) {
                 Navigator.pushReplacementNamed(context, '/home');
@@ -203,11 +206,7 @@ Future<void> getDataFromGoogleSheet(Global global) async {
   }
 
   //then order them
-  //TODO figure out how we order lessons
-  //For now we use master order list:
-  //I'm thinking it goes lesson number, any questions for it, lesson ....
-  //Only problem is when do you ever get to do remedial?
-  //possibly an algoritihim like add 2.5 to the actual lesson number and put it and its questions in there?
+  //For now we use master order list
   global.masterOrder.forEach((Section section, List<dynamic> value) {
     //first we add in all of our lessons, sorted by number
     List<Lesson> orgLessons =

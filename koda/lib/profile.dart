@@ -29,7 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
           child: ProfileScreen(
             //TODO: improve profile page ui
             //We need some way of contiuing the amazing background as well as having settings
-            providers: global.providers,
+            providers: Global.providers,
             actions: [
               SignedOutAction((context) {
                 global.signout();

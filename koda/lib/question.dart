@@ -1,13 +1,10 @@
-import 'dart:math';
 import 'package:collection/collection.dart';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'global.dart';
 import 'lesson.dart';
 
-//TODO: actual code type of question
 class Question extends Comparable {
   final Section section;
   final List<String> goal;
@@ -189,14 +186,12 @@ class MultipleChoiceQuestion extends StatefulWidget {
 }
 
 class _MultipleChoiceQuestionState extends State<MultipleChoiceQuestion> {
-  bool _hasAnswered = false;
   bool _isCorrect = false;
   String? answer;
 
   void _checkAnswer(String answer) {
     setState(() {
       this.answer = answer;
-      _hasAnswered = true;
       _isCorrect = widget.question.correctQs!.contains(answer);
       showCorrectSnackBar(context, _isCorrect);
       if (!_isCorrect) {
@@ -259,16 +254,7 @@ class _MultipleSelectQuestionState extends State<MultipleSelectQuestion> {
   void _checkAnswer() {
     setState(() {
       _isCorrect = const IterableEquality().equals(_selectedOptions, widget.question.correctQs!.toSet());
-      //TODO: this comparison isn't working
-      ///also, when reading in from the google sheet its only bringing in the one value, not both correct answers
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-          content: Text(
-            (_isCorrect) ? "Correct" : "Wrong",
-          ),
-        ),
-      ); //TODO: make this better
+      showCorrectSnackBar(context, _isCorrect);
       if (_isCorrect) {
         widget.passed();
       } else {
@@ -466,7 +452,7 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              Global.passedMessages[Random().nextInt(Global.passedMessages.length - 1)],
+              Global.getRandomMessage(MessageType.passed),
               style: Theme.of(context).textTheme.displaySmall!.copyWith(
                     color: Theme.of(context).colorScheme.error,
                   ),
@@ -474,7 +460,7 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
             ElevatedButton(
               onPressed: () => widget.passed(),
               child: Text(
-                Global.continueMessages[Random().nextInt(Global.continueMessages.length - 1)],
+                Global.getRandomMessage(MessageType.cont),
               ),
             ),
           ],
@@ -586,12 +572,14 @@ class ShortAnswerQuestion extends StatelessWidget {
  * force the user to specify the type of variable bc then not only can we use it, but they can learn it
  */
 
+//TODO: make this better
 void showCorrectSnackBar(BuildContext context, bool correct) {
-  //TODO: make this better
+  String ret = (correct) ? "Correct: " : "Incorrect: ";
+  ret += "\n${Global.getRandomMessage((correct) ? MessageType.passed : MessageType.failed)}";
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(
-        (correct) ? "Correct" : "Wrong",
+        ret,
       ),
     ),
   );

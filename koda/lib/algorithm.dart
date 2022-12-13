@@ -130,6 +130,7 @@ every day do 15 questions - notification somehow
  - 5-10 random questions on first open of the day
 
 profile - needs to track if they have opened the day yet(lastDay opened?)
+need to weight how many sections they have unlocked and how many completed too
 
 have a storage list for random questions that reloads at start of every day. prioritize going thorugh that list first, then on doing masterlist for whateverr section they are on
 have a counter for every normal lesson/question they have seen, when it passes 5 we reload that prioritized list with new questions to spice things up

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:koda/algorithm.dart';
-import 'package:page_transition/page_transition.dart';
 
 import 'bottom_buttons.dart';
 import 'global.dart';
@@ -132,7 +131,8 @@ class _QuestionPageState extends State<QuestionPage> {
   }
 }
 
-class ResponseDialog extends StatelessWidget {
+//Currently unused
+/* class ResponseDialog extends StatelessWidget {
   const ResponseDialog({
     Key? key,
     required this.passed,
@@ -148,7 +148,7 @@ class ResponseDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     if (passed) {
       return SimpleDialog(
-        title: const Text("Congratulations"), //TODO: make this a bank of random responses
+        title: Text(Global.getRandomMessage(MessageType.passed)),
         children: [
           Column(
             children: [
@@ -182,7 +182,7 @@ class ResponseDialog extends StatelessWidget {
                       ),
                     ); */
                   },
-                  child: const Text("Continue"))
+                  child: Text(Global.getRandomMessage(MessageType.cont)))
             ],
           ),
         ],
@@ -190,12 +190,12 @@ class ResponseDialog extends StatelessWidget {
     } else {
       return Center(
         child: SimpleDialog(
-          title: const Text("Incorrect"), //TODO make this one random too
+          title: Text(Global.getRandomMessage(MessageType.failed)),
           children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text("Oh! you just missed the mark!"),
-                ), //TODO: make this pick from a pool of random messages to make it more ...fun?
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(Global.getRandomMessage(MessageType.tryAgain)),
+                ),
               ] +
               explains
                   .map((e) => Padding(
@@ -209,13 +209,13 @@ class ResponseDialog extends StatelessWidget {
                   children: [
                     TextButton(
                         onPressed: () {
-                          //TODO find closest lesson backwards from currentPosition and then go there
+                          //TO-DO find closest lesson backwards from currentPosition and then go there
                         },
                         child: const Text("Back to lesson")),
                     ElevatedButton(
                       onPressed: () {
                         //Stuff to restart this page fresh
-                        //TODO: update to navigatePage()
+                        //TO-DO: update to navigatePage()
                         int currentPlace = global.currentPlace[question.section]!;
 
                         Widget page = QuestionPage(global, global.masterOrder[question.section]![currentPlace]);
@@ -238,3 +238,4 @@ class ResponseDialog extends StatelessWidget {
     }
   }
 }
+ */
