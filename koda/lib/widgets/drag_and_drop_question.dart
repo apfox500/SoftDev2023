@@ -25,7 +25,6 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
     super.initState();
     _matchingOptions = Map.from(widget.question.matchingOptions!);
     done = false;
-    _generate();
   }
 
   ///Fills the [_terms] and [_definitions] lists with thier appropriate widgets
@@ -44,15 +43,15 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
             boxShadow: [
               BoxShadow(
                 blurRadius: 2,
-                color: Global.bone,
+                color: Global.jet,
               ),
             ],
-            color: Global.coolGrey),
+            color: Global.bone),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.fromLTRB(8.0, 8, 8, 0),
           child: Text(
             term,
-            style: Theme.of(context).textTheme.bodyText2!.copyWith(
+            style: Theme.of(context).textTheme.bodyText1!.copyWith(
                   color: Theme.of(context).colorScheme.background,
                 ),
           ),
@@ -87,9 +86,10 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
                     Theme.of(context).colorScheme.onPrimary.withRed(30)
                   ],
                 ),
-                boxShadow: const [
+                boxShadow: [
                   BoxShadow(
-                    blurRadius: 2,
+                    blurRadius: 3,
+                    color: Global.davysGrey,
                   ),
                 ],
               ),
@@ -131,7 +131,7 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    //fill the list if we have no widgets and aren't done yet
+    if (!done && _terms.isEmpty) _generate(); //fill the list if we have no widgets and aren't done yet
     if (done) {
       return SizedBox(
         height: MediaQuery.of(context).size.height * .45,
@@ -167,10 +167,11 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
             ),
             //Terms
             Container(
+              width: MediaQuery.of(context).size.width * .9,
               decoration:
                   BoxDecoration(color: Global.jet.withOpacity(.5), borderRadius: BorderRadius.circular(10)),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 8),
                 child: Column(
                   children: [
                     Text(
@@ -190,10 +191,11 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
             ),
             //Definitions
             Container(
+              width: MediaQuery.of(context).size.width * .9,
               decoration:
                   BoxDecoration(color: Global.jet.withOpacity(.5), borderRadius: BorderRadius.circular(10)),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 8),
                 child: Column(
                   children: [
                     Row(

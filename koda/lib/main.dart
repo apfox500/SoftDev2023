@@ -19,12 +19,11 @@ import 'screens/flash/loading_page.dart';
 
 //Most important website ever:
 //https://www.generatormix.com/random-dinosaurs?number=1
-
+//TODO: add in the new sections
 //TODO: create a page with a python editor/console on it so they can actually code in app
-//TODO: that one page where you take a picture of code and it translates to psuedocode/enlgish
 //TODO: use routes instead of .push for the main pages(i think idk if its actually supposed to happen)
 //TODO: rn everything is like one class(intro and intermediate are combined), and they could
-///techincally start anywhere, so we will need to figure out if there is intro/inter mediate or how
+///techincally start anywhere, so we will need to figure out if there is intro/intermediate or how
 ///to unlock sections etc.
 //TODO: use testing to check widgets, methods, maybe whole app
 void main() async {

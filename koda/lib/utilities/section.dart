@@ -21,7 +21,7 @@ Section findSection(String section) {
     return Section.syntax;
   } else if (section == "data types") {
     return Section.dataTypes;
-  } else if (section == "arthmetic operators") {
+  } else if (section == "arithmetic operators") {
     return Section.arithmetic;
   } else if (section == "variables") {
     return Section.variables;
