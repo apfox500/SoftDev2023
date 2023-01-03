@@ -15,8 +15,6 @@ class _IDEPageState extends State<IDEPage> {
   @override
   Widget build(BuildContext context) {
     Global global = widget.global;
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Global.davysGrey,
       body: const SafeArea(
