@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:koda/screens/common/IDE_page.dart';
 import 'package:koda/screens/common/profile.dart';
 import 'package:koda/screens/common/translate.dart';
 import '../models/global.dart';
@@ -26,7 +27,15 @@ class FooterButtons extends StatelessWidget {
             pageWidget: TranslatePage(global),
             currentPage: page,
             color: Theme.of(context).colorScheme.primary,
-            icon: Icons.code, //TODO: better icon here
+            icon: Icons.photo_camera, //TODO: better icon here
+          ),
+          //IDE
+          BottomButton(
+            name: "IDE",
+            pageWidget: IDEPage(global),
+            currentPage: page,
+            color: Theme.of(context).colorScheme.primary,
+            icon: Icons.code,
           ),
           //home page -- Home
           BottomButton(
