@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:koda/screens/flash/failed_load.dart';
 
 import 'models/global.dart';
 import 'providers/firebase_options.dart';
@@ -19,7 +22,6 @@ import 'screens/flash/loading_page.dart';
 
 //Most important website ever:
 //https://www.generatormix.com/random-dinosaurs?number=1
-//TODO: add in the new sections
 //TODO: create a page with a python editor/console on it so they can actually code in app
 //TODO: use routes instead of .push for the main pages(i think idk if its actually supposed to happen)
 //TODO: rn everything is like one class(intro and intermediate are combined), and they could
@@ -27,30 +29,46 @@ import 'screens/flash/loading_page.dart';
 ///to unlock sections etc.
 //TODO: use testing to check widgets, methods, maybe whole app
 void main() async {
+  bool timerDone = false;
+  bool run = false;
+  Timer(const Duration(seconds: 15), () {
+    if (!run) {
+      timerDone = true;
+      runApp(
+        const FailedLoadScreen(),
+      );
+    }
+  });
   runApp(
     const LoadingScreen(),
   );
-  //TODO: add in timer while syncing lessons
-  ///Possibly use a future builder inside the app instead
   //initialize firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  if (!timerDone) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
   User? user = FirebaseAuth.instance.currentUser;
   //instantiate our global variable
   Global global = Global(user: user);
+
   //get lesson plans
-  await getDataFromGoogleSheet(global);
+  if (!timerDone) {
+    await getDataFromGoogleSheet(global);
+  }
 
   //profile stuff here for now
   //but why sync here when it syncs when you open the home page?
   //possibly remove
-  if (user != null) {
+  if (user != null && !timerDone) {
     await global.userUpdate();
   }
 
   //open real app
-  runApp(MyApp(global));
+  if (!timerDone) {
+    run = true;
+    runApp(MyApp(global));
+  }
 }
 
 class MyApp extends StatelessWidget {

@@ -29,14 +29,7 @@ class FooterButtons extends StatelessWidget {
             color: Theme.of(context).colorScheme.primary,
             icon: Icons.photo_camera, //TODO: better icon here
           ),
-          //IDE
-          BottomButton(
-            name: "IDE",
-            pageWidget: IDEPage(global),
-            currentPage: page,
-            color: Theme.of(context).colorScheme.primary,
-            icon: Icons.code,
-          ),
+
           //home page -- Home
           BottomButton(
             name: "Home",
