@@ -64,7 +64,7 @@ class Global {
     "This close... lets try again"
   ];
 
-  ///Messasges to show when the user passed a question
+  ///Messages to show when the user passed a question
   static List<String> passedMessages = [
     "Congratulations",
     "Knew you were smart!",
