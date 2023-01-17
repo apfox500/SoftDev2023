@@ -10,7 +10,6 @@ import '../screens/common/question_page.dart';
 import 'section.dart';
 
 //Eventually will want to have previous sections then the current one, but for now we will remain in each section
-//TODO: complete navigatePage algorithim
 
 /// Navigates to the proper question or lesson within the specified [section] after the [lesson] or [question]
 /// that is provided(if one is).
@@ -53,8 +52,8 @@ void navigatePage(
   } else if ((forwards || backwards) && (lesson == null && question == null)) {
     throw Exception("If forwards or backwards is true, then either lesson or question must be non-null.");
   } else {
-    if (global.priority.isEmpty) {
-      //tradtioional masterOrder nivgation practices
+    if (global.priority.isEmpty && global.priorityLesson == null) {
+      //tradtioional masterOrder navgation practices
       int currentPlace = global.currentPlace[section]!;
       Widget page = HomePage(global);
 
@@ -98,7 +97,9 @@ void navigatePage(
           child: page,
         ),
       );
-    } else {
+    } else if (global.priorityLesson == null && global.priority.isNotEmpty) {
+      //they are doing priority
+      Widget page = HomePage(global);
       //Priority is not empty, so we navigate using those
       if (global.priority[0] == question) {
         //we just did one of the questions
@@ -107,13 +108,43 @@ void navigatePage(
           if (global.priority.isEmpty) {
             //we finished them, so now we just make the standard call to navigatePage
             navigatePage(global, context, section); //not forwards b/c this is as if they just started
-          } else {}
+          } else {
+            //go onto the next question
+            page = QuestionPage(global, global.priority[0]);
+          }
         } else {
           //we have to find the lesson somehow and navigate to that temporarily
+
+          global.priorityLesson = global.lessons[section]!.firstWhere(
+            (Lesson element) => element.number == question!.lesson,
+          );
+          page = LessonPage(global, global.priorityLesson!);
         }
       } else {
-        //we are just starting the priority list
+        //we are just starting the priority list so push to first
+        page = QuestionPage(global, global.priority[0]);
       }
+
+      Navigator.push(
+        context,
+        PageTransition(
+          type: PageTransitionType.fade,
+          fullscreenDialog: true,
+          child: page,
+        ),
+      );
+    } else if (global.priorityLesson != null && global.priority.isNotEmpty) {
+      //They had gone back to a lesson and now they need to get back to their question
+      Widget page = QuestionPage(global, global.priority[0]);
+      global.priorityLesson = null; //make it null so it forgets this lesson and can go back to the question
+      Navigator.push(
+        context,
+        PageTransition(
+          type: PageTransitionType.fade,
+          fullscreenDialog: true,
+          child: page,
+        ),
+      );
     }
   }
 }

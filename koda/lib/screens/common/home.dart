@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:koda/utilities/algorithm.dart';
+import 'package:koda/utilities/navigation.dart';
 
 import '../../utilities/section.dart';
 import '../../widgets/footer_buttons.dart';

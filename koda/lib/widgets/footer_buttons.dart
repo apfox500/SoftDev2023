@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import 'package:koda/screens/common/ide_page.dart';
 import 'package:koda/screens/common/profile.dart';
 import 'package:koda/screens/common/translate.dart';
 import '../models/global.dart';
