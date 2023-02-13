@@ -24,6 +24,10 @@ dependencies:
   firebase_auth: ^4.1.2
   firebase_ui_auth: ^1.0.6
   cloud_firestore: ^4.1.0
+  #for the translate page, taking photos with system camera
+  image_picker: ^0.8.6
+
+  path_provider: ^2.0.12
 
 dev_dependencies:
   flutter_test:
