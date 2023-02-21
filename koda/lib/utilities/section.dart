@@ -3,10 +3,13 @@ enum Section {
   dataTypes,
   arithmetic,
   variables,
+  assignment,
   commonFunctions,
   errors,
   comparisonOperators,
   ifs,
+  dataTypes2,
+  operators,
   loops,
   reference,
   functions,
@@ -25,6 +28,8 @@ Section findSection(String section) {
     return Section.arithmetic;
   } else if (section == "variables") {
     return Section.variables;
+  } else if (section == "assignment operators") {
+    return Section.assignment;
   } else if (section == "common functions") {
     return Section.commonFunctions;
   } else if (section == "errors") {
@@ -33,6 +38,10 @@ Section findSection(String section) {
     return Section.comparisonOperators;
   } else if (section == "ifs") {
     return Section.ifs;
+  } else if (section == "data types 2") {
+    return Section.dataTypes2;
+  } else if (section == "other operators") {
+    return Section.operators;
   } else if (section == "loops") {
     return Section.loops;
   } else if (section == "reference") {

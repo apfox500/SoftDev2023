@@ -26,8 +26,9 @@ class FooterButtons extends StatelessWidget {
             pageWidget: TranslatePage(global),
             currentPage: page,
             color: Theme.of(context).colorScheme.primary,
-            icon: Icons.code, //TODO: better icon here
+            icon: Icons.photo_camera, //TODO: better icon here
           ),
+
           //home page -- Home
           BottomButton(
             name: "Home",

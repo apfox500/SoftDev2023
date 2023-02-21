@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:koda/utilities/algorithm.dart';
+import 'package:koda/utilities/navigation.dart';
 
 import '../../utilities/section.dart';
 import '../../widgets/footer_buttons.dart';
@@ -109,7 +109,7 @@ class _HomePageState extends State<HomePage> {
                                   }
                                 },
                                 //TODO: make a long tap where they can view all completed lessons, or quiz themselves, or reset their progress
-                                ///I', thinking some kind of expansion widget? modal sheet could also work
+                                ///I'm, thinking some kind of expansion widget? modal sheet could also work
                                 title: Text(Global.sectionNames[unlockedSections[index]]!),
                                 subtitle: Text('Progress: ${(progress * 100).round()}%'),
                               ),
