@@ -6,14 +6,12 @@ Future<ImageData> getDataFromImageAnalyzer(base64String) async {
   //cant use local server
   //must pass a url that points to a live, deployed server
 
-  Map data = {
-    "imageBase64": base64String
-  };
+  Map data = {"imageBase64": base64String};
 
   final body_ = json.encode(data);
 
   final resp = await http.post(
-      Uri.parse('https://koda-80dc1.uc.r.appspot.com/analyze'),
+      Uri.parse('https://koda-80dc1-m7mjyb4lxa-uc.a.run.app/analyze'),
       headers: {"Content-Type": "application/json"},
       body: body_);
 
@@ -27,18 +25,23 @@ Future<ImageData> getDataFromImageAnalyzer(base64String) async {
 }
 
 class ImageData {
-  final String Response;
-  final int ResponseLength;
+  final String Libraries;
+  final String VariablesDeclared;
+  final String UnrecognizedData;
   final String PostMessage;
 
-  const ImageData({required this.Response, required this.ResponseLength, required this.PostMessage});
+  const ImageData(
+      {required this.Libraries,
+      required this.VariablesDeclared,
+      required this.UnrecognizedData,
+      required this.PostMessage});
 
   factory ImageData.fromJson(Map<dynamic, dynamic> json_Data) {
     return ImageData(
-      Response: json_Data["response"],
-      ResponseLength: json_Data["responseLength"],
-      PostMessage: json_Data["ambussin"]
-      );
+        Libraries: json_Data["Libraries"],
+        VariablesDeclared: json_Data["VariablesDeclared"],
+        UnrecognizedData: json_Data["UnrecognizedData"],
+        PostMessage: json_Data["ambussin"]);
   }
 
   // @override
@@ -47,6 +50,11 @@ class ImageData {
   // }
 
   dynamic printObj() {
-    return {'length': ResponseLength, 'pm': PostMessage};
+    return {
+      'Libraries': Libraries,
+      'VariablesDeclared': VariablesDeclared,
+      'UnrecognizedData': UnrecognizedData,
+      'Post_Message': PostMessage
+    };
   }
 }

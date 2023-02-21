@@ -1,2 +1,5 @@
 flask
 flask_restful
+pytesseract
+opencv-Python
+Pillow

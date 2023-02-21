@@ -1,0 +1,5 @@
+Libraries: The 'import' command has imported the following libraries to the Python file: Resource,, Recognition
+
+Variables: 4 variables have been declared
+
+Unrecognized: 114 words/commands were unrecognized
