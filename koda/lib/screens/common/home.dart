@@ -54,7 +54,8 @@ class _HomePageState extends State<HomePage> {
                       if (snapshot.hasData) {
                         List<Section> unlockedSections = global.masterOrder.keys
                             .toList()
-                            .where((element) => global.unlocked[element]!)
+                            .where(
+                                (element) => global.unlocked[element] ?? false)
                             .toList();
                         return ListView.builder(
                           //Using a listview here to geerate a start for every section that they have unlocked
