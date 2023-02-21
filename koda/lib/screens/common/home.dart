@@ -61,10 +61,13 @@ class _HomePageState extends State<HomePage> {
                           itemCount: unlockedSections.length,
                           itemBuilder: ((context, index) {
                             double progress = 0;
-                            if (global.masterOrder[unlockedSections[index]]!.isNotEmpty) {
+                            if (global.masterOrder[unlockedSections[index]]!
+                                .isNotEmpty) {
                               //this checks to make sure that there is in fact a masterOrder to use
-                              progress = (global.currentPlace[unlockedSections[index]]!) /
-                                  global.masterOrder[unlockedSections[index]]!.length;
+                              progress = (global
+                                      .currentPlace[unlockedSections[index]]!) /
+                                  global.masterOrder[unlockedSections[index]]!
+                                      .length;
                               //Then do the math to find how what percent they are at
                             }
 
@@ -82,7 +85,9 @@ class _HomePageState extends State<HomePage> {
                                 onTap: () {
                                   if (progress < 1) {
                                     //only do smt if they haven't completed the section
-                                    navigatePage(global, context, unlockedSections[index], forwards: false);
+                                    navigatePage(global, context,
+                                        unlockedSections[index],
+                                        forwards: false);
                                     /* int currentPlace = global.currentPlace[unlockedSections[index]]!;
 
                                     Widget page = HomePage(global);
@@ -110,8 +115,10 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 //TODO: make a long tap where they can view all completed lessons, or quiz themselves, or reset their progress
                                 ///I'm, thinking some kind of expansion widget? modal sheet could also work
-                                title: Text(Global.sectionNames[unlockedSections[index]]!),
-                                subtitle: Text('Progress: ${(progress * 100).round()}%'),
+                                title: Text(Global
+                                    .sectionNames[unlockedSections[index]]!),
+                                subtitle: Text(
+                                    'Progress: ${(progress * 100).round()}%'),
                               ),
                             );
                           }),

@@ -6,8 +6,7 @@ import 'package:http/http.dart';
 Future<ImageData> getDataFromImageAnalyzer(base64String) async {
   //cant use local server
   //must pass a url that points to a live, deployed server
-  final resp = await http.post(Uri.parse("https://httpbin.org/ip"),
-      body: {'imageBase64': base64String});
+  final resp = await http.get(Uri.parse("https://httpbin.org/ip"));
   dynamic jsonAppData = convert.jsonDecode(resp.body);
 
   if (resp.statusCode == 200) {

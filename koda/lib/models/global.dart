@@ -33,7 +33,8 @@ class Global {
     Section.comparisonOperators: "Getting Into Python: Comparison Operators",
     Section.ifs: "Intermediate Python: If/Elif/Else",
     Section.dataTypes2: "Intermdediate Python: Data Types II",
-    Section.operators: "Intermediate Python: Identity, Membership, and Logic Operators",
+    Section.operators:
+        "Intermediate Python: Identity, Membership, and Logic Operators",
     Section.loops: "Intermediate Python: Loops",
     Section.reference: "Advanced Python: Object Reference",
     Section.functions: "Advanced Python: Making your own functions",
@@ -195,7 +196,9 @@ class Global {
   ///Firebase providers for this project
   ///
   ///Currently is just [EmailAuthProvider]
-  static List<AuthProvider<AuthListener, AuthCredential>> providers = [EmailAuthProvider()];
+  static List<AuthProvider<AuthListener, AuthCredential>> providers = [
+    EmailAuthProvider()
+  ];
 
   //Lesson and Question Stuff:
 
@@ -280,38 +283,46 @@ class Global {
         if (doc.exists) {
           final data = doc.data() as Map<String, dynamic>;
           //this actually gets what the user has seen
-          currentPlace = (data["currentPlace"] as Map<String, dynamic>)
-              .map((key, value) => MapEntry(Section.values.byName(key), value as int));
-          unlocked = (data["unlocked"] as Map<String, dynamic>)
-              .map((key, value) => MapEntry(Section.values.byName(key), value as bool));
+          currentPlace = (data["currentPlace"] as Map<String, dynamic>).map(
+              (key, value) =>
+                  MapEntry(Section.values.byName(key), value as int));
+          unlocked = (data["unlocked"] as Map<String, dynamic>).map(
+              (key, value) =>
+                  MapEntry(Section.values.byName(key), value as bool));
           questionGoal = data["questionGoal"];
-          questionDailyHistory =
-              (data["dailyHistory"] as Map<String, dynamic>).map((key, value) => MapEntry(key, value as int));
+          questionDailyHistory = (data["dailyHistory"] as Map<String, dynamic>)
+              .map((key, value) => MapEntry(key, value as int));
 
           //update seen questions
-          for (dynamic question in (data["seenQuestions"] ?? []) as List<dynamic>) {
-            List<dynamic> questionFormatted =
-                question.toString().split("-+-"); //Question.toString-+-timesSeen-+-timesPassed
-            List<String> indentifiers = questionFormatted[0].toString().split("|");
+          for (dynamic question
+              in (data["seenQuestions"] ?? []) as List<dynamic>) {
+            List<dynamic> questionFormatted = question
+                .toString()
+                .split("-+-"); //Question.toString-+-timesSeen-+-timesPassed
+            List<String> indentifiers =
+                questionFormatted[0].toString().split("|");
             //[section, ... ]
             Section section = Section.values.byName(indentifiers[0]);
-            Question realQuestion = questions[section]!
-                .firstWhere((element) => element.toString() == questionFormatted[0].toString());
+            Question realQuestion = questions[section]!.firstWhere((element) =>
+                element.toString() == questionFormatted[0].toString());
 
             //finally update the values
             realQuestion.timesSeen = int.parse(questionFormatted[1].toString());
-            realQuestion.timesPassed = int.parse(questionFormatted[2].toString());
+            realQuestion.timesPassed =
+                int.parse(questionFormatted[2].toString());
             seenQuestions.add(realQuestion);
           }
 
           //update seen lessons
           for (dynamic lesson in (data["lessons"] ?? []) as List<dynamic>) {
-            List<dynamic> lessonFormatted = lesson.toString().split("-+-"); //Lesson as a string-+-completed
-            List<String> indentifiers = lessonFormatted[0].toString().split("|");
+            List<dynamic> lessonFormatted =
+                lesson.toString().split("-+-"); //Lesson as a string-+-completed
+            List<String> indentifiers =
+                lessonFormatted[0].toString().split("|");
             //[section, lesson#, ... ]
             Section section = Section.values.byName(indentifiers[0]);
-            Lesson realLesson =
-                lessons[section]!.firstWhere((element) => element.toString() == lessonFormatted.toString());
+            Lesson realLesson = lessons[section]!.firstWhere(
+                (element) => element.toString() == lessonFormatted.toString());
 
             //finally update values
             realLesson.completed = (lessonFormatted[0].toString() == "true");
@@ -322,7 +333,8 @@ class Global {
           //we know they are a new user so imma go ahead and unlock datatypes for them
           unlocked[Section.dataTypes] = true;
           db.doc(user!.uid).set({
-            "currentPlace": currentPlace.map((key, value) => MapEntry(key.toString(), value)),
+            "currentPlace": currentPlace
+                .map((key, value) => MapEntry(key.toString(), value)),
             "unlocked": unlocked.map((key, value) => MapEntry(key.name, value)),
             "seenQuestions": [],
             "seenLessons": [],
@@ -343,11 +355,14 @@ class Global {
   Future<void> syncUserData() async {
     CollectionReference db = FirebaseFirestore.instance.collection("Users");
     if (user != null) {
-      List<String> formattedSeenQuestions =
-          seenQuestions.map((e) => "$e-+-${e.timesSeen}-+-${e.timesPassed}").toList();
-      List<String> formattedSeenLessons = seenLessons.map((e) => "$e-+-${e.completed}").toList();
+      List<String> formattedSeenQuestions = seenQuestions
+          .map((e) => "$e-+-${e.timesSeen}-+-${e.timesPassed}")
+          .toList();
+      List<String> formattedSeenLessons =
+          seenLessons.map((e) => "$e-+-${e.completed}").toList();
       await db.doc(user!.uid).update({
-        "currentPlace": currentPlace.map((key, value) => MapEntry(key.toString(), value)),
+        "currentPlace":
+            currentPlace.map((key, value) => MapEntry(key.toString(), value)),
         "unlocked": unlocked.map((key, value) => MapEntry(key.name, value)),
         "seenQuestions": formattedSeenQuestions,
         "seenLessons": formattedSeenLessons,

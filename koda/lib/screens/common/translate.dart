@@ -86,7 +86,7 @@ class _TranslatePageState extends State<TranslatePage> {
 
                       //send base64 string to method that makes API call to GCP Python Script
                       final result = await getDataFromImageAnalyzer(img64);
-
+                      print(img64);
                       // copy the file to a new path
                       //final XFile newImage = await photo?.copy('$path/image1.png');
                     },
