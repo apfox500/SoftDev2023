@@ -26,7 +26,7 @@ dependencies:
   cloud_firestore: ^4.1.0
   #for the translate page, taking photos with system camera
   image_picker: ^0.8.6
-
+  requests: ^4.4.0
   path_provider: ^2.0.12
 
 dev_dependencies:

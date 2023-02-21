@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 
 
@@ -16,22 +16,14 @@ class Image(Resource):
 
     def post(self):
         #this is where chiranth's code is going to go or like a call to his script running in a different file
-        parser = reqparse.RequestParser()
-        
-
-        #forces there to be an argument of HTTP request
-        parser.add_argument('imageBase64', required=True, type=str)
-
-        #parses the arguments from header (most likely the image) and stores it in args
-        args = parser.parse_args()
-
+        data = request.get_json()
         #insert DADDY CHIRANTH'S HOT OMG MAKE-ME-CUM code right here
 
 
         #return a JSON object with the data produced from the script
         return {
-            'response': args['imageBase64'],
-            'responseLength': len(args['imageBase64']),
+            'response': data['imageBase64'],
+            'responseLength': len(data['imageBase64']),
             'ambussin': "bussy"
         }, 200
 
