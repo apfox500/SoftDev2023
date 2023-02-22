@@ -28,6 +28,7 @@ class Image(Resource):
             'Libraries': processedData['Libraries:'],
             'VariablesDeclared': processedData['Variables:'],
             'UnrecognizedData': processedData['Unrecognized:'],
+            'Libs': processedData['Libs'],
             'ambussin': "Oh yes Daddy"
         }, 200
 

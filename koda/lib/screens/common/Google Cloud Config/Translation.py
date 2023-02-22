@@ -5,7 +5,7 @@ def translator(set):
     file.write("")
     file.close()
     num = importedLibraries(set)
-    numWords -= num
+    numWords -= num[0]
     value = numVariables(set)
     numWords -= (value*2)
     # variableType(set, value)
@@ -73,6 +73,7 @@ def translator(set):
     json.dump(dict1, out_file, indent=4, sort_keys=False)
     out_file.close()
     # print(dict1)
+    dict1["Libs"] = num[1]
     return dict1
 
 
@@ -97,7 +98,7 @@ def importedLibraries(ls):
     resultant = "Libraries: The 'import' command has imported the following libraries to the Python file: " + imported
     file.write(resultant + "\n\n")
     file.close()
-    return count
+    return (count, libs)
 
 
 def numVariables(ls):

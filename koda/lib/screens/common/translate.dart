@@ -11,8 +11,6 @@ import '../../widgets/footer_buttons.dart';
 import '../../models/global.dart';
 import '../../providers/get_data_from_Python_script.dart';
 
-//TODO: are we still doing this? if so gotta start it and figure out what we want to do with it
-
 class TranslatePage extends StatefulWidget {
   const TranslatePage(this.global, {Key? key}) : super(key: key);
   final Global global;
@@ -21,6 +19,10 @@ class TranslatePage extends StatefulWidget {
 }
 
 class _TranslatePageState extends State<TranslatePage> {
+  Map<String, dynamic> processedImage = {
+    "Libs": [],
+  };
+
   @override
   Widget build(BuildContext context) {
     Global global = widget.global;
@@ -73,22 +75,14 @@ class _TranslatePageState extends State<TranslatePage> {
                        * GCP will return a text file/JSON object for interpretation
                        */
 
-                      // getting a directory path for saving
-                      // Io.Directory appDocumentsDirectory =
-                      //     await getApplicationDocumentsDirectory(); // 1
-                      // String appDocumentsPath = appDocumentsDirectory.path; // 2
-                      // String filePath =
-                      //     '$appDocumentsPath/demoTextFile.txt'; // 3
-                      //convert image to base64
                       List<int> imageBytes =
                           await photo?.readAsBytes() as List<int>;
                       String img64 = base64Encode(imageBytes);
 
                       //send base64 string to method that makes API call to GCP Python Script
                       final result = await getDataFromImageAnalyzer(img64);
-                      print(result.printObj());
-                      // copy the file to a new path
-                      //final XFile newImage = await photo?.copy('$path/image1.png');
+
+                      //print(result.printObj());
                     },
                     child: Text("Take Photo")),
                 ElevatedButton(
@@ -113,12 +107,13 @@ class _TranslatePageState extends State<TranslatePage> {
                           await photo?.readAsBytes() as List<int>;
                       String img64 = base64Encode(imageBytes);
                       final result = await getDataFromImageAnalyzer(img64);
-                      print(img64);
+                      print(result.printObj());
 
                       // copy the file to a new path
                       //final XFile newImage = await photo?.copy('$path/image1.png');
                     },
                     child: Text("Choose Image from Library")),
+                const Visibility(child: Text("Hello!"), visible: true)
               ],
             )),
       ),
