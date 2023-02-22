@@ -89,6 +89,21 @@ void navigatePage(
       } catch (_) {} //lowkey forget why this is in a try catch, but I'm sure its important
       //I'm pretty sure that it has an exception if we are done with the masterorder
 
+      //check if we can unlock a new lesson - happens at >90%
+
+      if (((global.currentPlace[section]! != 0) ? global.currentPlace[section]! : 1) /
+              global.masterOrder[section]!.length >=
+          .9) {
+        late Section nextSection;
+        for (var element in Section.values) {
+          if (!global.unlocked[element]!) {
+            nextSection = element;
+            break;
+          }
+        }
+        global.unlocked[nextSection] = true;
+      }
+
       Navigator.push(
         context,
         PageTransition(

@@ -34,7 +34,7 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
       //loop through each and add them to the lists
 
       //starting with the term
-      double wigHeight = 35;
+      double wigHeight = 50;
       //This is the widget that actually hold text ifyk
       Widget wig = Container(
         height: wigHeight,
@@ -54,6 +54,7 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
             style: Theme.of(context).textTheme.bodyText1!.copyWith(
                   color: Theme.of(context).colorScheme.background,
                 ),
+            maxLines: 2,
           ),
         ),
       );
@@ -155,9 +156,9 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
       );
     } else {
       return SizedBox(
-        height: MediaQuery.of(context).size.height * .4,
+        height: MediaQuery.of(context).size.height * .7,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             //Question itself
             Text(
@@ -181,8 +182,10 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      spacing: 5,
+                      runSpacing: 5,
                       children: _terms,
                     ),
                   ],
@@ -198,8 +201,9 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
                 padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 8),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    Wrap(
+                      spacing: 5,
+                      runSpacing: 5,
                       children: _definitions,
                     ),
                     const SizedBox(
