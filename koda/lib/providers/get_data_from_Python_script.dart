@@ -29,18 +29,21 @@ class ImageData {
   final String VariablesDeclared;
   final String UnrecognizedData;
   final String PostMessage;
+  final List<dynamic> Libs;
 
   const ImageData(
       {required this.Libraries,
       required this.VariablesDeclared,
       required this.UnrecognizedData,
-      required this.PostMessage});
+      required this.PostMessage,
+      required this.Libs});
 
   factory ImageData.fromJson(Map<dynamic, dynamic> json_Data) {
     return ImageData(
         Libraries: json_Data["Libraries"],
         VariablesDeclared: json_Data["VariablesDeclared"],
         UnrecognizedData: json_Data["UnrecognizedData"],
+        Libs: ['Pytesseract', "opencv"],
         PostMessage: json_Data["ambussin"]);
   }
 
@@ -54,6 +57,7 @@ class ImageData {
       'Libraries': Libraries,
       'VariablesDeclared': VariablesDeclared,
       'UnrecognizedData': UnrecognizedData,
+      'Libs': ['Libs', "nut"],
       'Post_Message': PostMessage
     };
   }

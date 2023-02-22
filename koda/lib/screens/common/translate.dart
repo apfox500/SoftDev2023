@@ -3,6 +3,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+
 import 'package:path_provider/path_provider.dart';
 import 'dart:io' as Io;
 import 'dart:convert';
@@ -19,9 +21,13 @@ class TranslatePage extends StatefulWidget {
 }
 
 class _TranslatePageState extends State<TranslatePage> {
-  Map<String, dynamic> processedImage = {
-    "Libs": [],
-  };
+  //make each variable tht the script return an independednt state variable
+  late String Libraries = "";
+  late String VariablesDec = "";
+  late String UnrecognizedData = "";
+  List<dynamic> libs = [''];
+  bool show = false;
+  bool loadingState = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +37,8 @@ class _TranslatePageState extends State<TranslatePage> {
 
     final ImagePicker picker = ImagePicker();
 
-    return Scaffold(
+    return FlutterEasyLoading(
+        child: Scaffold(
       backgroundColor: Global.davysGrey,
       body: SafeArea(
         child: Container(
@@ -66,6 +73,8 @@ class _TranslatePageState extends State<TranslatePage> {
                 ),
                 ElevatedButton(
                     onPressed: () async {
+                      EasyLoading.show(status: 'loading...');
+
                       XFile? photo =
                           await picker.pickImage(source: ImageSource.camera);
 
@@ -82,11 +91,23 @@ class _TranslatePageState extends State<TranslatePage> {
                       //send base64 string to method that makes API call to GCP Python Script
                       final result = await getDataFromImageAnalyzer(img64);
 
+                      setState(() {
+                        Libraries = result.Libraries;
+                        VariablesDec = result.VariablesDeclared;
+                        UnrecognizedData = result.UnrecognizedData;
+                        libs = result.Libs;
+                        show = true;
+                      });
+
+                      EasyLoading.dismiss();
+
                       //print(result.printObj());
                     },
                     child: Text("Take Photo")),
                 ElevatedButton(
                     onPressed: () async {
+                      EasyLoading.show(status: 'loading...');
+
                       XFile? photo =
                           await picker.pickImage(source: ImageSource.gallery);
 
@@ -109,11 +130,73 @@ class _TranslatePageState extends State<TranslatePage> {
                       final result = await getDataFromImageAnalyzer(img64);
                       print(result.printObj());
 
+                      EasyLoading.dismiss();
+
                       // copy the file to a new path
                       //final XFile newImage = await photo?.copy('$path/image1.png');
                     },
                     child: Text("Choose Image from Library")),
-                const Visibility(child: Text("Hello!"), visible: true)
+                Visibility(
+                    visible: show,
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(
+                              left: 10, right: 10, top: 15, bottom: 10),
+                          padding: const EdgeInsets.all(10),
+                          decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 239, 190, 111),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Text(
+                            '$Libraries',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: libs.length,
+                          itemBuilder: (BuildContext context, int i) {
+                            return Container(
+                              margin: const EdgeInsets.only(
+                                  left: 10, right: 10, top: 5, bottom: 5),
+                              padding: const EdgeInsets.all(10),
+                              decoration: const BoxDecoration(
+                                  color: Color.fromARGB(255, 246, 211, 155),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              child: Text(libs[i]),
+                            );
+                          },
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(
+                              left: 10, right: 10, top: 25, bottom: 5),
+                          padding: const EdgeInsets.all(10),
+                          decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 239, 164, 111),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Text(
+                            VariablesDec,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(
+                              left: 10, right: 10, top: 5, bottom: 5),
+                          padding: const EdgeInsets.all(10),
+                          decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 151, 197, 78),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Text(
+                            UnrecognizedData,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ))
               ],
             )),
       ),
@@ -121,7 +204,7 @@ class _TranslatePageState extends State<TranslatePage> {
         global,
         page: "Translate",
       ),
-    );
+    ));
   }
 }
 
