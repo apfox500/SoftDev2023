@@ -98,9 +98,9 @@ class _TranslatePageState extends State<TranslatePage> {
                       //send base64 string to method that makes API call to GCP Python Script
                       final result = await getDataFromImageAnalyzer(img64);
                       if (result.Libs.isNotEmpty) {
-                        final cumLibraries = await getPythonLibraryDescription(result.Libs);
-                        if (cumLibraries.isNotEmpty) {
-                          libsWithDescription = cumLibraries;
+                        final libraryDesc = await getPythonLibraryDescription(result.Libs);
+                        if (libraryDesc.isNotEmpty) {
+                          libsWithDescription = libraryDesc;
                           libsWithDescriptionBool = true;
                         }
                       }
@@ -145,9 +145,9 @@ class _TranslatePageState extends State<TranslatePage> {
                       //send base64 string to method that makes API call to GCP Python Script
                       final result = await getDataFromImageAnalyzer(img64);
                       if (result.Libs.isNotEmpty) {
-                        final cumLibraries = await getPythonLibraryDescription(result.Libs);
-                        if (cumLibraries.isNotEmpty) {
-                          libsWithDescription = cumLibraries;
+                        final libraryDesc = await getPythonLibraryDescription(result.Libs);
+                        if (libraryDesc.isNotEmpty) {
+                          libsWithDescription = libraryDesc;
                           libsWithDescriptionBool = true;
                         }
                       }
