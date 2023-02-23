@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'dart:io' as Io;
@@ -25,10 +26,14 @@ class _TranslatePageState extends State<TranslatePage> {
   late String Libraries = "";
   late String VariablesDec = "";
   late String UnrecognizedData = "";
-  List<dynamic> libs = [''];
+  List<String> libs = [''];
+  List<Map<String, String>> libsWithDescription = [];
+  bool libsWithDescriptionBool = false;
   bool show = false;
   bool loadingState = false;
   bool hasLibraries = false;
+
+  //CollectionReference db = FirebaseFirestore.instance.collection("Python Libraries");
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +80,13 @@ class _TranslatePageState extends State<TranslatePage> {
                 ElevatedButton(
                     onPressed: () async {
                       EasyLoading.show(status: 'loading...');
+                      setState(() {
+                        Libraries = "";
+                        VariablesDec = "";
+                        UnrecognizedData = "";
+                        hasLibraries = false;
+                        show = false;
+                      });
 
                       XFile? photo =
                           await picker.pickImage(source: ImageSource.camera);
@@ -91,7 +103,14 @@ class _TranslatePageState extends State<TranslatePage> {
 
                       //send base64 string to method that makes API call to GCP Python Script
                       final result = await getDataFromImageAnalyzer(img64);
-
+                      if (result.Libs.isNotEmpty) {
+                        final cumLibraries =
+                            await getPythonLibraryDescription(result.Libs);
+                        if (cumLibraries.isNotEmpty) {
+                          libsWithDescription = cumLibraries;
+                          libsWithDescriptionBool = true;
+                        }
+                      }
                       setState(() {
                         Libraries = result.Libraries;
                         VariablesDec = result.VariablesDeclared;
@@ -107,10 +126,17 @@ class _TranslatePageState extends State<TranslatePage> {
 
                       //print(result.printObj());
                     },
-                    child: Text("Take Photo")),
+                    child: const Text("Take Photo")),
                 ElevatedButton(
                     onPressed: () async {
                       EasyLoading.show(status: 'loading...');
+                      setState(() {
+                        Libraries = "";
+                        VariablesDec = "";
+                        UnrecognizedData = "";
+                        hasLibraries = false;
+                        show = false;
+                      });
 
                       XFile? photo =
                           await picker.pickImage(source: ImageSource.gallery);
@@ -121,25 +147,37 @@ class _TranslatePageState extends State<TranslatePage> {
                        * GCP will return a text file/JSON object for interpretation
                        */
 
-                      // getting a directory path for saving
-                      // Io.Directory appDocumentsDirectory =
-                      //     await getApplicationDocumentsDirectory(); // 1
-                      // String appDocumentsPath = appDocumentsDirectory.path; // 2
-                      // String filePath =
-                      //     '$appDocumentsPath/demoTextFile.txt'; // 3
-
                       List<int> imageBytes =
                           await photo?.readAsBytes() as List<int>;
                       String img64 = base64Encode(imageBytes);
+
+                      //send base64 string to method that makes API call to GCP Python Script
                       final result = await getDataFromImageAnalyzer(img64);
-                      print(result.printObj());
+                      if (result.Libs.isNotEmpty) {
+                        final cumLibraries =
+                            await getPythonLibraryDescription(result.Libs);
+                        if (cumLibraries.isNotEmpty) {
+                          libsWithDescription = cumLibraries;
+                          libsWithDescriptionBool = true;
+                        }
+                      }
+                      setState(() {
+                        Libraries = result.Libraries;
+                        VariablesDec = result.VariablesDeclared;
+                        UnrecognizedData = result.UnrecognizedData;
+                        if (result.Libs.isNotEmpty) {
+                          hasLibraries = true;
+                          libs = result.Libs;
+                        }
+                        show = true;
+                      });
 
                       EasyLoading.dismiss();
 
                       // copy the file to a new path
                       //final XFile newImage = await photo?.copy('$path/image1.png');
                     },
-                    child: Text("Choose Image from Library")),
+                    child: const Text("Choose Image from Library")),
                 Visibility(
                     visible: show,
                     child: Column(
@@ -161,10 +199,10 @@ class _TranslatePageState extends State<TranslatePage> {
                           ),
                         ),
                         Visibility(
-                            visible: hasLibraries,
+                            visible: libsWithDescriptionBool,
                             child: ListView.builder(
                               shrinkWrap: true,
-                              itemCount: libs.length,
+                              itemCount: libsWithDescription.length,
                               itemBuilder: (BuildContext context, int i) {
                                 return Container(
                                   margin: const EdgeInsets.only(
@@ -174,7 +212,16 @@ class _TranslatePageState extends State<TranslatePage> {
                                       color: Color.fromARGB(255, 246, 211, 155),
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(10))),
-                                  child: Text(libs[i]),
+                                  child:
+                                      Text.rich(TextSpan(children: <TextSpan>[
+                                    TextSpan(
+                                        text: libsWithDescription[i]['Lib'],
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                    TextSpan(
+                                        text:
+                                            ': ${libsWithDescription[i]['Description']}'),
+                                  ])),
                                 );
                               },
                             )),

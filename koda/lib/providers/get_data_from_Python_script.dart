@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:requests/requests.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
 Future<ImageData> getDataFromImageAnalyzer(base64String) async {
@@ -29,7 +30,7 @@ class ImageData {
   final String VariablesDeclared;
   final String UnrecognizedData;
   final String PostMessage;
-  final List<dynamic> Libs;
+  final List<String> Libs;
 
   const ImageData(
       {required this.Libraries,
@@ -61,4 +62,23 @@ class ImageData {
       'Post_Message': PostMessage
     };
   }
+}
+
+Future<List<Map<String, String>>> getPythonLibraryDescription(
+    List<String> pythLib) async {
+  List<Map<String, String>> ret = [];
+
+  CollectionReference db =
+      FirebaseFirestore.instance.collection("Python Libraries");
+
+  for (var e in pythLib) {
+    await db.doc(e.toLowerCase()).get().then((DocumentSnapshot doc) {
+      if (doc.exists) {
+        final data = doc.data() as Map<String, dynamic>;
+        ret.add({'Lib': e, "Description": data["Description"]!});
+      }
+    });
+  }
+
+  return ret;
 }
