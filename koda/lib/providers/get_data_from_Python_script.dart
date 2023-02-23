@@ -50,9 +50,6 @@ class ImageData {
   }
 
   // @override
-  // String toString() {
-  //   return StringLength;
-  // }
 
   dynamic printObj() {
     return {
