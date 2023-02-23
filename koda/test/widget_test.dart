@@ -5,6 +5,8 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:koda/models/global.dart';
@@ -111,6 +113,7 @@ void testGenerateRandomQuestions() {
 
   // Print the questions to the console to check the result
   for (var question in randomQuestions) {
+    // ignore: avoid_print
     print(question.question);
   }
 }

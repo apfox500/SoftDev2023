@@ -30,9 +30,9 @@ Future<void> getDataFromGoogleSheet(Global global) async {
       Section section = findSection(data['section']);
       //lesson pairing
       double? lesson;
-      if (data['lesson'] != "")
+      if (data['lesson'] != "") {
         lesson = double.parse(data['lesson'].toString());
-
+      }
       //load in generic data
       Question question = Question(
         section: section,
@@ -51,8 +51,7 @@ Future<void> getDataFromGoogleSheet(Global global) async {
         List<String> correctQs = [];
         Map<String, String> explanations = {};
         //Fancy way to generate an 8 letter list
-        List<String> letters = List.generate(
-            8, (index) => String.fromCharCode("A".codeUnitAt(0) + index));
+        List<String> letters = List.generate(8, (index) => String.fromCharCode("A".codeUnitAt(0) + index));
         for (String letter in letters) {
           //loop through all 8 possible letters
           String option = data[letter].toString();
@@ -60,12 +59,13 @@ Future<void> getDataFromGoogleSheet(Global global) async {
           if (option != "") {
             //only do stuff if it isn't empty
             options.add(option); //add to options
-            if (correctLetters.contains(letter))
+            if (correctLetters.contains(letter)) {
               correctQs.add(option); //add to correct if it is right
+            }
             String explain = data["exp$letter"];
-            if (explain != "")
-              explanations[option] =
-                  explain; //only add an explanation if one exists
+            if (explain != "") {
+              explanations[option] = explain; //only add an explanation if one exists
+            }
           }
         }
         question.setMultiple(options, correctQs, explanations);
@@ -127,12 +127,10 @@ Future<void> getDataFromGoogleSheet(Global global) async {
   //For now we use master order list
   global.masterOrder.forEach((Section section, List<dynamic> value) {
     //first we add in all of our lessons, sorted by number
-    List<Lesson> orgLessons = global.lessons[section]!
-        .where((element) => element.number % 1 == 0)
-        .toList(); //original lessons
-    List<Lesson> remLessons = global.lessons[section]!
-        .where((element) => element.number % 1 != 0)
-        .toList(); //remediation lessons
+    List<Lesson> orgLessons =
+        global.lessons[section]!.where((element) => element.number % 1 == 0).toList(); //original lessons
+    List<Lesson> remLessons =
+        global.lessons[section]!.where((element) => element.number % 1 != 0).toList(); //remediation lessons
     List<Question> questions = global.questions[section]!
         .where((element) => element.lesson != null)
         .toList(); //we only want questions paired with lessons in the master order

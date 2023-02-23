@@ -51,7 +51,7 @@ void createPriority(Global global) {
   global.priority = generateRandomQuestions(global);
 }
 
-//TODO: create algorrithim to decide when to create priority list
+//TODO: create algorithim to decide when to create priority list
 bool needPriority(Global global) {
   return false;
 }

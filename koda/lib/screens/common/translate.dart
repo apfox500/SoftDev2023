@@ -1,18 +1,15 @@
-import 'dart:io';
-import 'dart:typed_data';
+// ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:path_provider/path_provider.dart';
-import 'dart:io' as Io;
 import 'dart:convert';
 
 import '../../widgets/footer_buttons.dart';
 import '../../models/global.dart';
-import '../../providers/get_data_from_Python_script.dart';
+import '../../providers/get_data_from_python_script.dart';
 
 class TranslatePage extends StatefulWidget {
   const TranslatePage(this.global, {Key? key}) : super(key: key);
@@ -38,8 +35,8 @@ class _TranslatePageState extends State<TranslatePage> {
   @override
   Widget build(BuildContext context) {
     Global global = widget.global;
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    //double height = MediaQuery.of(context).size.height;
+    //double width = MediaQuery.of(context).size.width;
 
     final ImagePicker picker = ImagePicker();
 
@@ -66,8 +63,7 @@ class _TranslatePageState extends State<TranslatePage> {
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(
-                      left: 20, right: 20, top: 15, bottom: 15),
+                  margin: const EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
                   padding: const EdgeInsets.all(10),
                   decoration: const BoxDecoration(
                       color: Color.fromARGB(255, 108, 155, 238),
@@ -88,8 +84,7 @@ class _TranslatePageState extends State<TranslatePage> {
                         show = false;
                       });
 
-                      XFile? photo =
-                          await picker.pickImage(source: ImageSource.camera);
+                      XFile? photo = await picker.pickImage(source: ImageSource.camera);
 
                       /**
                        * Basically need to send the image to GCP
@@ -97,22 +92,20 @@ class _TranslatePageState extends State<TranslatePage> {
                        * GCP will return a text file/JSON object for interpretation
                        */
 
-                      List<int> imageBytes =
-                          await photo?.readAsBytes() as List<int>;
+                      List<int> imageBytes = await photo?.readAsBytes() as List<int>;
                       String img64 = base64Encode(imageBytes);
 
                       //send base64 string to method that makes API call to GCP Python Script
                       final result = await getDataFromImageAnalyzer(img64);
                       if (result.Libs.isNotEmpty) {
-                        final cumLibraries =
-                            await getPythonLibraryDescription(result.Libs);
+                        final cumLibraries = await getPythonLibraryDescription(result.Libs);
                         if (cumLibraries.isNotEmpty) {
                           libsWithDescription = cumLibraries;
                           libsWithDescriptionBool = true;
                         }
                       }
                       setState(() {
-                        Libraries = result.Libraries;
+                        Libraries = result.libraries;
                         VariablesDec = result.VariablesDeclared;
                         UnrecognizedData = result.UnrecognizedData;
                         if (result.Libs.isNotEmpty) {
@@ -138,8 +131,7 @@ class _TranslatePageState extends State<TranslatePage> {
                         show = false;
                       });
 
-                      XFile? photo =
-                          await picker.pickImage(source: ImageSource.gallery);
+                      XFile? photo = await picker.pickImage(source: ImageSource.gallery);
 
                       /**
                        * Basically need to send the image to GCP
@@ -147,22 +139,20 @@ class _TranslatePageState extends State<TranslatePage> {
                        * GCP will return a text file/JSON object for interpretation
                        */
 
-                      List<int> imageBytes =
-                          await photo?.readAsBytes() as List<int>;
+                      List<int> imageBytes = await photo?.readAsBytes() as List<int>;
                       String img64 = base64Encode(imageBytes);
 
                       //send base64 string to method that makes API call to GCP Python Script
                       final result = await getDataFromImageAnalyzer(img64);
                       if (result.Libs.isNotEmpty) {
-                        final cumLibraries =
-                            await getPythonLibraryDescription(result.Libs);
+                        final cumLibraries = await getPythonLibraryDescription(result.Libs);
                         if (cumLibraries.isNotEmpty) {
                           libsWithDescription = cumLibraries;
                           libsWithDescriptionBool = true;
                         }
                       }
                       setState(() {
-                        Libraries = result.Libraries;
+                        Libraries = result.libraries;
                         VariablesDec = result.VariablesDeclared;
                         UnrecognizedData = result.UnrecognizedData;
                         if (result.Libs.isNotEmpty) {
@@ -185,15 +175,13 @@ class _TranslatePageState extends State<TranslatePage> {
                         Visibility(
                           visible: hasLibraries,
                           child: Container(
-                            margin: const EdgeInsets.only(
-                                left: 10, right: 10, top: 15, bottom: 10),
+                            margin: const EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 10),
                             padding: const EdgeInsets.all(10),
                             decoration: const BoxDecoration(
                                 color: Color.fromARGB(255, 239, 190, 111),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
+                                borderRadius: BorderRadius.all(Radius.circular(10))),
                             child: Text(
-                              '$Libraries',
+                              Libraries,
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -205,22 +193,16 @@ class _TranslatePageState extends State<TranslatePage> {
                               itemCount: libsWithDescription.length,
                               itemBuilder: (BuildContext context, int i) {
                                 return Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 10, right: 10, top: 5, bottom: 5),
+                                  margin: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
                                   padding: const EdgeInsets.all(10),
                                   decoration: const BoxDecoration(
                                       color: Color.fromARGB(255, 246, 211, 155),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10))),
-                                  child:
-                                      Text.rich(TextSpan(children: <TextSpan>[
+                                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                                  child: Text.rich(TextSpan(children: <TextSpan>[
                                     TextSpan(
                                         text: libsWithDescription[i]['Lib'],
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    TextSpan(
-                                        text:
-                                            ': ${libsWithDescription[i]['Description']}'),
+                                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                                    TextSpan(text: ': ${libsWithDescription[i]['Description']}'),
                                   ])),
                                 );
                               },
@@ -228,36 +210,29 @@ class _TranslatePageState extends State<TranslatePage> {
                         Visibility(
                             visible: !hasLibraries,
                             child: Container(
-                                margin: const EdgeInsets.only(
-                                    left: 10, right: 10, top: 5, bottom: 5),
+                                margin: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
                                 padding: const EdgeInsets.all(10),
                                 decoration: const BoxDecoration(
                                     color: Color.fromARGB(255, 246, 211, 155),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                child:
-                                    Text("No libraries have been imported"))),
+                                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                                child: const Text("No libraries have been imported"))),
                         Container(
-                          margin: const EdgeInsets.only(
-                              left: 10, right: 10, top: 15, bottom: 5),
+                          margin: const EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 5),
                           padding: const EdgeInsets.all(10),
                           decoration: const BoxDecoration(
                               color: Color.fromARGB(255, 239, 164, 111),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
+                              borderRadius: BorderRadius.all(Radius.circular(10))),
                           child: Text(
                             VariablesDec,
                             textAlign: TextAlign.center,
                           ),
                         ),
                         Container(
-                          margin: const EdgeInsets.only(
-                              left: 10, right: 10, top: 5, bottom: 5),
+                          margin: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
                           padding: const EdgeInsets.all(10),
                           decoration: const BoxDecoration(
                               color: Color.fromARGB(255, 151, 197, 78),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
+                              borderRadius: BorderRadius.all(Radius.circular(10))),
                           child: Text(
                             UnrecognizedData,
                             textAlign: TextAlign.center,

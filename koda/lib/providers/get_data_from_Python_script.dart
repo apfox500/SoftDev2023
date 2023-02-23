@@ -1,5 +1,6 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:convert';
-import 'package:requests/requests.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,10 +12,8 @@ Future<ImageData> getDataFromImageAnalyzer(base64String) async {
 
   final body_ = json.encode(data);
 
-  final resp = await http.post(
-      Uri.parse('https://koda-80dc1-m7mjyb4lxa-uc.a.run.app/analyze'),
-      headers: {"Content-Type": "application/json"},
-      body: body_);
+  final resp = await http.post(Uri.parse('https://koda-80dc1-m7mjyb4lxa-uc.a.run.app/analyze'),
+      headers: {"Content-Type": "application/json"}, body: body_);
 
   var decodedResponse = jsonDecode(utf8.decode(resp.bodyBytes)) as Map;
 
@@ -26,14 +25,14 @@ Future<ImageData> getDataFromImageAnalyzer(base64String) async {
 }
 
 class ImageData {
-  final String Libraries;
+  final String libraries;
   final String VariablesDeclared;
   final String UnrecognizedData;
   final String PostMessage;
   final List<dynamic> Libs;
 
   const ImageData(
-      {required this.Libraries,
+      {required this.libraries,
       required this.VariablesDeclared,
       required this.UnrecognizedData,
       required this.PostMessage,
@@ -41,7 +40,7 @@ class ImageData {
 
   factory ImageData.fromJson(Map<dynamic, dynamic> json_Data) {
     return ImageData(
-        Libraries: json_Data["Libraries"],
+        libraries: json_Data["Libraries"],
         VariablesDeclared: json_Data["VariablesDeclared"],
         UnrecognizedData: json_Data["UnrecognizedData"],
         Libs: json_Data['Libs'],
@@ -53,7 +52,7 @@ class ImageData {
 
   dynamic printObj() {
     return {
-      'Libraries': Libraries,
+      'Libraries': libraries,
       'VariablesDeclared': VariablesDeclared,
       'UnrecognizedData': UnrecognizedData,
       'Libs': Libs,
@@ -62,18 +61,13 @@ class ImageData {
   }
 }
 
-Future<List<Map<String, String>>> getPythonLibraryDescription(
-    List<dynamic> pythLib) async {
+Future<List<Map<String, String>>> getPythonLibraryDescription(List<dynamic> pythLib) async {
   List<Map<String, String>> ret = [];
 
-  CollectionReference db =
-      FirebaseFirestore.instance.collection("Python Libraries");
+  CollectionReference db = FirebaseFirestore.instance.collection("Python Libraries");
 
   for (var e in pythLib) {
-    await db
-        .doc((e as String).toLowerCase())
-        .get()
-        .then((DocumentSnapshot doc) {
+    await db.doc((e as String).toLowerCase()).get().then((DocumentSnapshot doc) {
       if (doc.exists) {
         final data = doc.data() as Map<String, dynamic>;
         ret.add({'Lib': e, "Description": data["Description"]!});
