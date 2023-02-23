@@ -45,7 +45,7 @@ class ImageData {
         VariablesDeclared: json_Data["VariablesDeclared"],
         UnrecognizedData: json_Data["UnrecognizedData"],
         Libs: json_Data['Libs'],
-        //Libs: ["Pytesseract"],
+        //Libs: ["Pytesseract", "Numpy"],
         PostMessage: json_Data["ambussin"]);
   }
 
