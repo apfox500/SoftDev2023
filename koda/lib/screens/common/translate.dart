@@ -28,6 +28,7 @@ class _TranslatePageState extends State<TranslatePage> {
   List<dynamic> libs = [''];
   bool show = false;
   bool loadingState = false;
+  bool hasLibraries = false;
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +96,10 @@ class _TranslatePageState extends State<TranslatePage> {
                         Libraries = result.Libraries;
                         VariablesDec = result.VariablesDeclared;
                         UnrecognizedData = result.UnrecognizedData;
-                        libs = result.Libs;
+                        if (result.Libs.isNotEmpty) {
+                          hasLibraries = true;
+                          libs = result.Libs;
+                        }
                         show = true;
                       });
 
@@ -140,38 +144,55 @@ class _TranslatePageState extends State<TranslatePage> {
                     visible: show,
                     child: Column(
                       children: [
-                        Container(
-                          margin: const EdgeInsets.only(
-                              left: 10, right: 10, top: 15, bottom: 10),
-                          padding: const EdgeInsets.all(10),
-                          decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 239, 190, 111),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          child: Text(
-                            '$Libraries',
-                            textAlign: TextAlign.center,
+                        Visibility(
+                          visible: hasLibraries,
+                          child: Container(
+                            margin: const EdgeInsets.only(
+                                left: 10, right: 10, top: 15, bottom: 10),
+                            padding: const EdgeInsets.all(10),
+                            decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 239, 190, 111),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            child: Text(
+                              '$Libraries',
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: libs.length,
-                          itemBuilder: (BuildContext context, int i) {
-                            return Container(
-                              margin: const EdgeInsets.only(
-                                  left: 10, right: 10, top: 5, bottom: 5),
-                              padding: const EdgeInsets.all(10),
-                              decoration: const BoxDecoration(
-                                  color: Color.fromARGB(255, 246, 211, 155),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
-                              child: Text(libs[i]),
-                            );
-                          },
-                        ),
+                        Visibility(
+                            visible: hasLibraries,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: libs.length,
+                              itemBuilder: (BuildContext context, int i) {
+                                return Container(
+                                  margin: const EdgeInsets.only(
+                                      left: 10, right: 10, top: 5, bottom: 5),
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: const BoxDecoration(
+                                      color: Color.fromARGB(255, 246, 211, 155),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10))),
+                                  child: Text(libs[i]),
+                                );
+                              },
+                            )),
+                        Visibility(
+                            visible: !hasLibraries,
+                            child: Container(
+                                margin: const EdgeInsets.only(
+                                    left: 10, right: 10, top: 5, bottom: 5),
+                                padding: const EdgeInsets.all(10),
+                                decoration: const BoxDecoration(
+                                    color: Color.fromARGB(255, 246, 211, 155),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child:
+                                    Text("No libraries have been imported"))),
                         Container(
                           margin: const EdgeInsets.only(
-                              left: 10, right: 10, top: 25, bottom: 5),
+                              left: 10, right: 10, top: 15, bottom: 5),
                           padding: const EdgeInsets.all(10),
                           decoration: const BoxDecoration(
                               color: Color.fromARGB(255, 239, 164, 111),
