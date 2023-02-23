@@ -30,7 +30,7 @@ class ImageData {
   final String VariablesDeclared;
   final String UnrecognizedData;
   final String PostMessage;
-  final List<String> Libs;
+  final List<dynamic> Libs;
 
   const ImageData(
       {required this.Libraries,
@@ -44,7 +44,8 @@ class ImageData {
         Libraries: json_Data["Libraries"],
         VariablesDeclared: json_Data["VariablesDeclared"],
         UnrecognizedData: json_Data["UnrecognizedData"],
-        Libs: ['Pytesseract', "opencv"],
+        Libs: json_Data['Libs'],
+        //Libs: ["Pytesseract"],
         PostMessage: json_Data["ambussin"]);
   }
 
@@ -58,21 +59,24 @@ class ImageData {
       'Libraries': Libraries,
       'VariablesDeclared': VariablesDeclared,
       'UnrecognizedData': UnrecognizedData,
-      'Libs': ['Libs', "nut"],
+      'Libs': Libs,
       'Post_Message': PostMessage
     };
   }
 }
 
 Future<List<Map<String, String>>> getPythonLibraryDescription(
-    List<String> pythLib) async {
+    List<dynamic> pythLib) async {
   List<Map<String, String>> ret = [];
 
   CollectionReference db =
       FirebaseFirestore.instance.collection("Python Libraries");
 
   for (var e in pythLib) {
-    await db.doc(e.toLowerCase()).get().then((DocumentSnapshot doc) {
+    await db
+        .doc((e as String).toLowerCase())
+        .get()
+        .then((DocumentSnapshot doc) {
       if (doc.exists) {
         final data = doc.data() as Map<String, dynamic>;
         ret.add({'Lib': e, "Description": data["Description"]!});

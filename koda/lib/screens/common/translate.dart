@@ -26,7 +26,7 @@ class _TranslatePageState extends State<TranslatePage> {
   late String Libraries = "";
   late String VariablesDec = "";
   late String UnrecognizedData = "";
-  List<String> libs = [''];
+  List<dynamic> libs = [''];
   List<Map<String, String>> libsWithDescription = [];
   bool libsWithDescriptionBool = false;
   bool show = false;
