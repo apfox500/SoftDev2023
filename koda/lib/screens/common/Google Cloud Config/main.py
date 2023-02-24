@@ -20,7 +20,7 @@ class Image(Resource):
         # this is where chiranth's code is going to go or like a call to his script running in a different file
         data = request.get_json()
 
-        # insert DADDY CHIRANTH'S HOT OMG MAKE-ME-CUM code right here
+        # insert Cloud Python Recognition Script
         processedData = Recognition(data['imageBase64'])
 
         # return a JSON object with the data produced from the script
